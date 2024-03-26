@@ -4,7 +4,7 @@
 
 html,
 body {
-  @apply h-full w-full bg-blue-500;
+  @apply h-full w-full bg-blue-500 overflow-hidden;
 }
 
 @layer components {
