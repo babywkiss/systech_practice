@@ -1,15 +1,18 @@
 import SidePanel from "@/components/side-panel";
 import { IconMenu, IconDeviceMobile } from "@tabler/icons-react";
+import Link from "next/link";
 
 export default function Header() {
 	return (
 		<div className="flex justify-between items-center py-2 px-3 font-bold text-white">
-			<div className="flex gap-2 items-center">
+			<a href="/" className="flex gap-2 items-center btn">
 				<IconDeviceMobile />
 				<span className="uppercase">phone shop</span>
-			</div>
+			</a>
 			<div className="flex gap-2 items-center">
-				<button className="btn btn-outline">Логин</button>
+				<Link href="/auth/login" className="btn btn-outline">
+					Логин
+				</Link>
 				<SidePanel
 					trigger={
 						<div className="btn btn-filled">
