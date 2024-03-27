@@ -37,6 +37,7 @@ model Phone {
   id                 Int    @id @default(autoincrement())
   available_quantity Int
   manufacturer       String
+  imageLink          String
   model              String
   priceBYN           Int
   releaseYear        Int

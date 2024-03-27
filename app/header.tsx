@@ -20,7 +20,11 @@ export default function Header() {
 						</div>
 					}
 				>
-					<span className="text-3xl font-bold">Бургер-меню</span>
+					<div className="flex flex-col p-5">
+						<Link className="text-blue-500 btn" href="/catalog">
+							Каталог
+						</Link>
+					</div>
 				</SidePanel>
 			</div>
 		</div>
