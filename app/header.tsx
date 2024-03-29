@@ -50,6 +50,9 @@ export default function Header() {
 						<Link className="text-blue-500 btn" href="/catalog">
 							Каталог
 						</Link>
+						<Link className="text-blue-500 btn" href="/profile">
+							Мой аккаунт
+						</Link>
 					</div>
 				</SidePanel>
 			</div>

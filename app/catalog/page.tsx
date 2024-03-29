@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const PhoneCard = ({ phone }: { phone: Phone }) => {
 	return (
-		<div className="flex flex-col gap-3 p-3 bg-blue-100 rounded-lg w-fit">
+		<div className="flex flex-col gap-3 p-3 bg-blue-100 rounded-lg w-fit h-fit">
 			<Link
 				href={`/items/${phone.id}`}
 				className="flex gap-3 items-center text-xl"

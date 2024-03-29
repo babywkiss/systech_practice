@@ -3,14 +3,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../store/userSlice";
 import { RootState } from "../store/store";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
 	const user = useSelector((state: RootState) => state.login);
+	const router = useRouter();
 	const dispatch = useDispatch();
 
 	const logout = () => {
 		localStorage.removeItem("authToken");
 		dispatch(logoutUser());
+		router.replace("/");
 	};
 	return user.user ? (
 		<div className="flex flex-col">

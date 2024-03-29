@@ -20,7 +20,6 @@ export default function SignUpForm() {
 			setError((await response.json()).error);
 			return;
 		}
-		console.log(await response.json());
 	};
 	return (
 		<form onSubmit={handleSubmit} className="flex flex-col gap-3 items-center">

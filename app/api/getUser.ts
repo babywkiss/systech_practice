@@ -11,7 +11,6 @@ export default async function getUser(request: Request) {
 			new TextEncoder().encode(process.env.SECRET_JWT ?? ""),
 		);
 		const userId = data.payload.id as number;
-		console.log(userId);
 		const user = await prisma.user.findUnique({ where: { id: userId } });
 		return user;
 	} catch {
