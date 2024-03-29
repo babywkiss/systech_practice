@@ -1,5 +1,6 @@
 import Slider from "@/components/slider";
 import prisma from "@/prisma/client";
+import Link from "next/link";
 import { FC } from "react";
 
 const Card: FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -11,7 +12,7 @@ export default async function Home() {
 	return (
 		<div className="flex flex-col gap-5">
 			<h1 className="text-3xl font-bold text-blue-500">Главная страница</h1>
-			<div className="flex flex-col gap-3 lg:flex-row">
+			<div className="flex flex-col gap-3 lg:flex-row shrink-0">
 				<Card>
 					<h3 className="text-xl font-bold text-gray-600">Новости и акции</h3>
 					<Slider
@@ -23,6 +24,9 @@ export default async function Home() {
 				<Card>
 					<h3 className="text-xl font-bold text-gray-600">Популярные товары</h3>
 				</Card>
+				<Link href="/catalog" className="btn btn-filled">
+					Перейти в каталог
+				</Link>
 			</div>
 		</div>
 	);
