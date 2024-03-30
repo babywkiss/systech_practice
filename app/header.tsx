@@ -1,15 +1,60 @@
 "use client";
 
 import SidePanel from "@/components/side-panel";
-import { IconMenu, IconDeviceMobile } from "@tabler/icons-react";
+import { IconMenu, IconDeviceMobile, IconBasket } from "@tabler/icons-react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "./store/store";
 import { loginUser } from "./store/userSlice";
 
+const ProfileInfo = () => {
+	const user = useSelector((state: RootState) => state.user);
+	const basketItemsCount = useSelector(
+		(state: RootState) => state.basket.length,
+	);
+	return user ? (
+		<Link href="/profile" className="flex gap-3 items-center btn btn-outline">
+			<span>{user.email}</span>
+			<div className="flex gap-1">
+				<IconBasket />
+				<span>{basketItemsCount}</span>
+			</div>
+		</Link>
+	) : (
+		<button>Login</button>
+	);
+};
+
+const NavMenu = () => {
+	const links = [
+		{ name: "Каталог", href: "/catalog" },
+		{ name: "Мой аккаунт", href: "/profile" },
+	];
+	const [isOpen, setIsOpen] = useState(false);
+	return (
+		<>
+			<button onClick={() => setIsOpen(true)} className="btn btn-filled">
+				<IconMenu />
+			</button>
+			<SidePanel isOpen={isOpen} onClose={() => setIsOpen(false)}>
+				<ul className="flex flex-col gap-3 p-5 w-72">
+					{links.map(({ name, href }) => (
+						<Link
+							onClick={() => setIsOpen(false)}
+							className="text-blue-500 border-b-2 transition-transform hover:scale-110 border-b-blue-500"
+							href={href}
+						>
+							{name}
+						</Link>
+					))}
+				</ul>
+			</SidePanel>
+		</>
+	);
+};
+
 export default function Header() {
-	const user = useSelector((state: RootState) => state.login);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -29,32 +74,8 @@ export default function Header() {
 				<span className="uppercase">phone shop</span>
 			</a>
 			<div className="flex gap-2 items-center">
-				{user.user ? (
-					<span>
-						Вы вошли как:
-						<Link href="/profile">{user.user?.email}</Link>
-					</span>
-				) : (
-					<Link href="/auth/login" className="btn btn-outline">
-						Логин
-					</Link>
-				)}
-				<SidePanel
-					trigger={
-						<div className="btn btn-filled">
-							<IconMenu />
-						</div>
-					}
-				>
-					<div className="flex flex-col p-5">
-						<Link className="text-blue-500 btn" href="/catalog">
-							Каталог
-						</Link>
-						<Link className="text-blue-500 btn" href="/profile">
-							Мой аккаунт
-						</Link>
-					</div>
-				</SidePanel>
+				<ProfileInfo />
+				<NavMenu />
 			</div>
 		</div>
 	);

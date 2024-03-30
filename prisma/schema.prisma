@@ -34,7 +34,7 @@ model Order {
 }
 
 model Phone {
-  id                 Int    @id @default(autoincrement())
+  id                 Int     @id @default(autoincrement())
   available_quantity Int
   manufacturer       String
   imageLink          String
@@ -45,8 +45,7 @@ model Phone {
   screenSizeInches   Int
   cpu                String
   ramGB              Int
-  order              Order? @relation(fields: [orderId], references: [id])
-  orderId            Int?
+  orders             Order[]
 }
 
 model Promo {

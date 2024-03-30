@@ -40,29 +40,28 @@ export default function Slider({ items }: { items: React.ReactNode[] }) {
 	}, [isAuto]);
 
 	return (
-		<div className="flex flex-col gap-2 shrink-0">
-			<div className="flex justify-between items-center">
+		<div className="relative group/controls">
+			<div className="transition-opacity md:opacity-0 group-hover/controls:opacity-100">
 				<button
 					onClick={() => {
 						suspendAuto();
 						movePrev();
 					}}
-					className="btn"
+					className="absolute left-0 top-1/2 -translate-y-1/2 btn btn-outline"
 				>
 					<IconArrowLeft className="text-blue-500" />
 				</button>
-				{items[index] ?? null}
 				<button
 					onClick={() => {
 						suspendAuto();
 						moveNext();
 					}}
-					className="btn"
+					className="absolute right-0 top-1/2 -translate-y-1/2 btn btn-outline"
 				>
 					<IconArrowRight className="text-blue-500" />
 				</button>
 			</div>
-			<div className="flex gap-3 justify-center w-full">
+			<div className="flex absolute bottom-0 left-1/2 gap-3 justify-center -translate-x-1/2">
 				{items.map((_, i) => (
 					<button
 						className={`w-4 h-4 btn ${
@@ -76,6 +75,8 @@ export default function Slider({ items }: { items: React.ReactNode[] }) {
 					></button>
 				))}
 			</div>
+
+			{items[index] ?? null}
 		</div>
 	);
 }
