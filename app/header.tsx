@@ -43,6 +43,7 @@ const NavMenu = () => {
 				<ul className="flex flex-col gap-3 p-5 w-72">
 					{links.map(({ name, href }) => (
 						<Link
+							key={href}
 							onClick={() => setIsOpen(false)}
 							className="text-blue-500 border-b-2 transition-transform hover:scale-110 border-b-blue-500"
 							href={href}
