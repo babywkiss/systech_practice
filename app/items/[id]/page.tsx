@@ -10,7 +10,7 @@ export default async function PhonePage({
 		where: { id: Number(params.id) },
 	});
 	return phone ? (
-		<div className="flex flex-col gap-3 w-fit">
+		<div className="flex overflow-auto flex-col gap-3 w-full h-full">
 			<h1 className="text-3xl font-bold">
 				{phone.manufacturer} {phone.model}
 			</h1>
@@ -18,7 +18,7 @@ export default async function PhonePage({
 				В наличии: {phone.available_quantity}
 			</span>
 			<img className="object-cover h-96 rounded-lg" src={phone.imageLink} />
-			<span className="py-3 px-5 bg-gray-200 rounded-lg">
+			<span className="py-3 px-5 w-full break-words bg-gray-200 rounded-lg">
 				{phone.description}
 			</span>
 			<ul>
