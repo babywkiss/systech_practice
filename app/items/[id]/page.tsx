@@ -1,4 +1,7 @@
 import prisma from "@/prisma/client";
+import { IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
+
+// TODO: Add to basket button handler
 
 export default async function PhonePage({
 	params,
@@ -7,24 +10,35 @@ export default async function PhonePage({
 		where: { id: Number(params.id) },
 	});
 	return phone ? (
-		<div>
+		<div className="flex flex-col gap-3 w-fit">
 			<h1 className="text-3xl font-bold">
 				{phone.manufacturer} {phone.model}
 			</h1>
-			<img className="h-64 rounded-lg aspect-square" src={phone.imageLink} />
-			<span>{phone.description}</span>
+			<span className="text-green-500">
+				В наличии: {phone.available_quantity}
+			</span>
+			<img className="object-cover h-96 rounded-lg" src={phone.imageLink} />
+			<span className="py-3 px-5 bg-gray-200 rounded-lg">
+				{phone.description}
+			</span>
 			<ul>
-				<li>
+				<li className="flex">
+					<IconCalendar />
 					Год выпуска: <span className="font-bold">{phone.releaseYear}</span>
 				</li>
-				<li>
+				<li className="flex">
+					<IconCpu />
 					Процессор: <span className="font-bold">{phone.cpu}</span>{" "}
 				</li>
-				<li>
+				<li className="flex">
+					<IconDisc />
 					Оперативная память:{" "}
 					<span className="font-bold">{phone.ramGB} GB</span>
 				</li>
 			</ul>
+			<button className="bg-green-500 btn btn-filled">
+				Добавить в корзину
+			</button>
 		</div>
 	) : (
 		<h1>Товар не найден</h1>
