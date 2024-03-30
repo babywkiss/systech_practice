@@ -46,6 +46,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 					value={filters.maxPrice}
 					min="0"
 					max="7000"
+					step="100"
 					type="range"
 				/>
 				<span>0 - 7000 BYN</span>
