@@ -9,9 +9,15 @@ export async function POST(request: Request) {
 	};
 	const user = await prisma.user.findUnique({ where: { email } });
 	if (!user)
-		return Response.json({ error: "Пользователь не найден" }, { status: 500 });
+		return Response.json(
+			{ error: "Пользователь не существует или пароль не совпадает" },
+			{ status: 500 },
+		);
 	if (!(await bcrypt.compare(password, user.passwordHash)))
-		return Response.json({ error: "Пароль не совпадает" }, { status: 500 });
+		return Response.json(
+			{ error: "Пользователь не существует или пароль не совпадает" },
+			{ status: 500 },
+		);
 	const token = await new jose.SignJWT({ id: user.id })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
