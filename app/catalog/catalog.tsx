@@ -47,7 +47,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 							onlyAvailable: !filters.onlyAvailable,
 						});
 					}}
-					checked={filters.onlyAvailable}
+					defaultChecked={filters.onlyAvailable}
 				/>
 				<span>Максимальная цена (BYN) {filters.maxPrice}</span>
 				<input
