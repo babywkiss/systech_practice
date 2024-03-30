@@ -22,7 +22,9 @@ const ProfileInfo = () => {
 			</div>
 		</Link>
 	) : (
-		<button>Login</button>
+		<Link className="btn btn-outline" href="/auth/login">
+			Войти в аккаунт
+		</Link>
 	);
 };
 
