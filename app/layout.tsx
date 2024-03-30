@@ -1,7 +1,11 @@
 import "./globals.css";
 import Header from "./header";
 import Footer from "./footer";
-import { StoreProvider } from "./store/storeProvider";
+import dynamic from "next/dynamic";
+
+const StoreProvider = dynamic(() => import("./store/storeProvider"), {
+	ssr: false,
+});
 
 export default function RootLayout({
 	children,
@@ -9,16 +13,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<StoreProvider>
-			<html lang="en">
-				<body className="flex flex-col">
+		<html lang="en">
+			<body className="flex flex-col">
+				<StoreProvider>
 					<Header />
 					<main className="flex overflow-auto flex-col p-3 w-full h-full bg-white">
 						{children}
 					</main>
 					<Footer />
-				</body>
-			</html>
-		</StoreProvider>
+				</StoreProvider>
+			</body>
+		</html>
 	);
 }
