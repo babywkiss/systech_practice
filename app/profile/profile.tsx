@@ -1,7 +1,7 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../store/userSlice";
+import { logoutUser, removeItemFromBasket } from "../store/userSlice";
 import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
 
@@ -24,11 +24,25 @@ export default function Profile() {
 				Выйти из аккаунта
 			</button>
 			<span className="text-xl font-bold">Ваша корзина</span>
-			<ul>
+			<ul className="flex gap-2">
 				{basket.map((item) => (
-					<li>
-						{item.manufacturer} - {item.model}
-					</li>
+					<div
+						key={item.id}
+						className="flex flex-col items-center p-3 bg-blue-200 rounded-lg"
+					>
+						<img className="h-32" src={item.imageLink} />
+						<span>
+							{item.manufacturer} - {item.model}
+						</span>
+						<button
+							onClick={() => {
+								dispatch(removeItemFromBasket(item));
+							}}
+							className="bg-orange-500 btn btn-filled"
+						>
+							Удалить из корзины
+						</button>
+					</div>
 				))}
 			</ul>
 		</div>
