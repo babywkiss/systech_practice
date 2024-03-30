@@ -9,6 +9,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 		searchQuery: "",
 		maxPrice: 7000,
 		onlyAvailable: false,
+		sortBy: "asc" as "asc" | "desc",
 	});
 	return (
 		<div className="flex flex-wrap gap-3 h-full">
@@ -24,6 +25,19 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 					placeholder="Поиск по названию"
 					className="input"
 				/>
+				<span>Сортировать по</span>
+				<select
+					onChange={(e) => {
+						setFilters({
+							...filters,
+							sortBy: e.target.value as "asc" | "desc",
+						});
+					}}
+					defaultValue={"asc"}
+				>
+					<option value="asc">По возрастанию цены</option>
+					<option value="desc">По убыванию цены</option>
+				</select>
 				<span>Только в наличии</span>
 				<input
 					type="checkbox"
@@ -63,6 +77,9 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 								.toLowerCase()
 								.includes(filters.searchQuery.toLowerCase())),
 				)
+				.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
+					return filters.sortBy === "asc" ? aPrice - bPrice : bPrice - aPrice;
+				})
 				.map((phone) => (
 					<PhoneCard key={phone.id} phone={phone} />
 				))}
