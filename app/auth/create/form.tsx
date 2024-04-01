@@ -49,6 +49,8 @@ export default function SignUpForm() {
 			/>
 			<input
 				type="password"
+				minLength={7}
+				maxLength={32}
 				onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
 				value={password}
 				placeholder="Пароль"

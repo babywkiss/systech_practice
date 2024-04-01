@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "./store/store";
 import { loginUser } from "./store/userSlice";
+import { Toaster } from "react-hot-toast";
 
 const ProfileInfo = () => {
 	const user = useSelector((state: RootState) => state.user);
@@ -72,6 +73,7 @@ export default function Header() {
 
 	return (
 		<div className="flex justify-between items-center py-2 px-3 font-bold text-white">
+			<Toaster />
 			<a href="/" className="flex gap-2 items-center btn">
 				<IconDeviceMobile />
 				<span className="uppercase">phone shop</span>

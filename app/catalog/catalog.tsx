@@ -6,6 +6,73 @@ import { useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 10;
 
+type Filters = {
+	searchQuery: string;
+	maxPrice: number;
+	onlyAvailable: boolean;
+};
+
+const CatalogOptions = ({
+	filters,
+	setFilters,
+	setIsSortAsc,
+}: {
+	filters: Filters;
+	setFilters: (filters: Filters) => void;
+	setIsSortAsc: (isSortAsc: boolean) => void;
+}) => {
+	return (
+		<div className="flex flex-col gap-2 py-3 w-full">
+			<input
+				onInput={(e) => {
+					setFilters({
+						...filters,
+						searchQuery: (e.target as HTMLInputElement).value,
+					});
+				}}
+				placeholder="Поиск по названию"
+				className="input"
+			/>
+			<span>Сортировать по</span>
+			<select
+				onChange={(e) => {
+					setIsSortAsc(e.target.value === "asc");
+				}}
+				defaultValue={"asc"}
+			>
+				<option value="asc">По возрастанию цены</option>
+				<option value="desc">По убыванию цены</option>
+			</select>
+			<span>Только в наличии</span>
+			<input
+				type="checkbox"
+				onInput={() => {
+					setFilters({
+						...filters,
+						onlyAvailable: !filters.onlyAvailable,
+					});
+				}}
+				defaultChecked={filters.onlyAvailable}
+			/>
+			<span>Максимальная цена (BYN) {filters.maxPrice}</span>
+			<input
+				onInput={(e) => {
+					setFilters({
+						...filters,
+						maxPrice: Number((e.target as HTMLInputElement).value),
+					});
+				}}
+				value={filters.maxPrice}
+				min="0"
+				max="7000"
+				step="100"
+				type="range"
+			/>
+			<span>0 - 7000 BYN</span>
+		</div>
+	);
+};
+
 export default function Catalog({ phones }: { phones: Phone[] }) {
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({
@@ -35,59 +102,18 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 		Number(filteredPhones.length % ITEMS_PER_PAGE !== 0);
 
 	return (
-		<div className="flex flex-col gap-3 h-full md:flex-row">
-			<div className="flex flex-col gap-3 p-3 w-full bg-blue-200 rounded-lg md:w-72 md:h-full">
-				<span className="font-bold">Фильтры</span>
-				<input
-					onInput={(e) => {
-						setFilters({
-							...filters,
-							searchQuery: (e.target as HTMLInputElement).value,
-						});
+		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
+			<details className="flex p-3 w-full h-full bg-blue-100 rounded-lg md:w-1/3">
+				<summary className="text-xl font-bold">Фильтры</summary>
+				<CatalogOptions
+					filters={filters}
+					setFilters={(filters) => {
+						setFilters(filters);
 						setPage(0);
 					}}
-					placeholder="Поиск по названию"
-					className="input"
+					setIsSortAsc={setIsSortAsc}
 				/>
-				<span>Сортировать по</span>
-				<select
-					onChange={(e) => {
-						setIsSortAsc(e.target.value === "asc");
-					}}
-					defaultValue={"asc"}
-				>
-					<option value="asc">По возрастанию цены</option>
-					<option value="desc">По убыванию цены</option>
-				</select>
-				<span>Только в наличии</span>
-				<input
-					type="checkbox"
-					onInput={() => {
-						setFilters({
-							...filters,
-							onlyAvailable: !filters.onlyAvailable,
-						});
-						setPage(0);
-					}}
-					defaultChecked={filters.onlyAvailable}
-				/>
-				<span>Максимальная цена (BYN) {filters.maxPrice}</span>
-				<input
-					onInput={(e) => {
-						setFilters({
-							...filters,
-							maxPrice: Number((e.target as HTMLInputElement).value),
-						});
-						setPage(0);
-					}}
-					value={filters.maxPrice}
-					min="0"
-					max="7000"
-					step="100"
-					type="range"
-				/>
-				<span>0 - 7000 BYN</span>
-			</div>
+			</details>
 			<div className="flex flex-col h-full">
 				<div className="flex items-center p-2">
 					<span>Страница:</span>
@@ -105,18 +131,20 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 						))}
 					</div>
 				</div>
-				<div className="flex overflow-auto flex-wrap gap-1 h-full">
-					{filteredPhones
-						.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
-							return isSortAsc ? aPrice - bPrice : bPrice - aPrice;
-						})
-						.slice(
-							ITEMS_PER_PAGE * page,
-							ITEMS_PER_PAGE * page + ITEMS_PER_PAGE,
-						)
-						.map((phone) => (
-							<PhoneCard key={phone.id} phone={phone} />
-						))}
+				<div className="flex overflow-auto flex-wrap gap-1 items-center h-full">
+					{filteredPhones.length > 0 ? (
+						filteredPhones
+							.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
+								return isSortAsc ? aPrice - bPrice : bPrice - aPrice;
+							})
+							.slice(
+								ITEMS_PER_PAGE * page,
+								ITEMS_PER_PAGE * page + ITEMS_PER_PAGE,
+							)
+							.map((phone) => <PhoneCard key={phone.id} phone={phone} />)
+					) : (
+						<span className="text-2xl">Товары не найдены</span>
+					)}
 				</div>
 			</div>
 		</div>
