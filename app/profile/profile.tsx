@@ -7,28 +7,19 @@ import { useRouter } from "next/navigation";
 import { Phone } from "@prisma/client";
 import Link from "next/link";
 
-// TODO: simplify logic (use library)
-
-const getUniquePhones = (phones: Phone[]) => {
-	const unique: Phone[] = [];
-	const viewedIds = new Set<number>();
-	for (const phone of phones) {
-		if (!viewedIds.has(phone.id)) {
-			unique.push(phone);
-			viewedIds.add(phone.id);
-		}
-	}
-	return unique;
-};
-
-const getCountedBasket = (phones: Phone[]) => {
-	const unique = getUniquePhones(phones).map((phone) => ({ phone, count: 0 }));
-	for (const phone of phones) {
-		const target = unique.find((p) => p.phone.id === phone.id);
-		if (target) target.count += 1;
-	}
-	return unique;
-};
+const getCountedBasket = (phones: Phone[]) =>
+	Array.from(
+		phones
+			.reduce(
+				(basket, phone) =>
+					basket.set(phone.id, {
+						phone,
+						count: (basket.get(phone.id)?.count ?? 0) + 1,
+					}),
+				new Map<number, { phone: Phone; count: number }>(),
+			)
+			.values(),
+	);
 
 export default function Profile() {
 	// TODO: add pay page
