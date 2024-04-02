@@ -52,7 +52,7 @@ export default function Profile() {
 					</button>
 				</div>
 			) : (
-				<Link href="/auth/login" className="btn btn-primary">
+				<Link href="/auth/login" className="btn btn-primary md:w-fit">
 					Войти в аккаунт
 				</Link>
 			)}

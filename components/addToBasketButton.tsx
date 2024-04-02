@@ -20,7 +20,7 @@ export default function addToBasketButton({ phone }: { phone: Phone }) {
 	return (
 		<button
 			disabled={phone.available_quantity < 1}
-			className="btn btn-filled btn-primary"
+			className="btn btn-filled btn-success"
 			onClick={() => {
 				dispatch(addItemToBasket(phone));
 				toast(`Товар ${phone.model} добавлен в корзину!`);
