@@ -36,7 +36,7 @@ const CatalogOptions = ({
 					className="grow"
 					placeholder="Поиск по названию"
 				/>
-				<IconSearch size="1rem" />
+				<IconSearch size="20" />
 			</label>
 			<label className="form-control">
 				<div className="label">
@@ -125,13 +125,19 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 	const pagesCount =
 		Math.floor(filteredPhones.length / ITEMS_PER_PAGE) +
 		Number(filteredPhones.length % ITEMS_PER_PAGE !== 0);
-	const pagesRange = [page - 2, page - 1, page, page + 1, page + 2].filter(
-		(p) => p >= 0 && p < pagesCount,
-	);
+	const pagesRange = [
+		page - 3,
+		page - 2,
+		page - 1,
+		page,
+		page + 1,
+		page + 2,
+		page + 3,
+	].filter((p) => p >= 0 && p < pagesCount);
 
 	return (
 		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
-			<div className="md:w-1/4 collapse bg-base-200 md:collapse-open">
+			<div className="md:w-1/4 collapse bg-base-200 max-md:collapse-arrow md:collapse-open">
 				<input type="checkbox" />
 				<div className="text-xl font-medium collapse-title">Фильтры</div>
 				<div className="flex flex-col gap-3 collapse-content">

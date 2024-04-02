@@ -31,25 +31,25 @@ export default async function PhonePage({
 					src={phone.imageLink}
 				/>
 				<ul className="flex flex-col gap-3 w-full">
-					<li className="flex p-3 w-full bg-gray-100 rounded-lg">
+					<li className="flex p-3 w-full rounded-lg bg-base-100">
 						<span className="break-all">{phone.description}</span>
 					</li>
 					<li className="flex gap-1 items-center">
-						<IconCalendar size={"2rem"} />
+						<IconCalendar size={"30"} />
 						<span>
 							Год выпуска:
 							<span className="font-bold">{phone.releaseYear}</span>
 						</span>
 					</li>
 					<li className="flex gap-1 items-center">
-						<IconCpu size={"2rem"} />
+						<IconCpu size={"30"} />
 						<span>
 							Процессор:
 							<span className="font-bold">{phone.cpu}</span>
 						</span>
 					</li>
 					<li className="flex gap-1 items-center">
-						<IconDisc size={"2rem"} />
+						<IconDisc size={"30"} />
 						<span>
 							Оперативная память:
 							<span className="font-bold">{phone.ramGB} ГБ</span>

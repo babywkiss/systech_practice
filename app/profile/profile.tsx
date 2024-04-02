@@ -57,7 +57,7 @@ export default function Profile() {
 				</Link>
 			)}
 			<div className="flex gap-5 items-center text-neutral-500">
-				<IconBasket className="" size="3rem" />
+				<IconBasket className="" size="50" />
 				<span className="text-xl font-bold md:text-3xl">Ваша корзина</span>
 				{basket.length > 0 && (
 					<span className="text-2xl font-bold text-success">

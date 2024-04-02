@@ -67,7 +67,7 @@ export default async function MainPage() {
 				href="/catalog"
 			>
 				<span className="text-5xl font-bold">Каталог</span>
-				<IconShoppingBag size="7rem" />
+				<IconShoppingBag size="100" />
 			</Link>
 		</main>
 	);
