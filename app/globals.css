@@ -4,21 +4,5 @@
 
 html,
 body {
-  @apply h-full w-full bg-blue-500 overflow-hidden;
-}
-
-@layer components {
-  .btn {
-    @apply px-3 py-1 rounded-lg hover:bg-gradient-to-t from-black/10 to-black/10 active:scale-90 transition-all;
-  }
-
-  .btn-outline {
-    @apply bg-white border-2 border-blue-500 text-blue-500;
-  }
-  .btn-filled {
-    @apply bg-blue-500 border-2 border-white text-white;
-  }
-  .input {
-    @apply bg-white border-2 border-blue-500 px-3 py-1 rounded-lg focus:outline focus:outline-blue-500;
-  }
+  @apply h-full w-full bg-base-100 overflow-hidden;
 }

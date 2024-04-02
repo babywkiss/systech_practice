@@ -6,17 +6,20 @@ import AddToBasketButton from "@/components/addToBasketButton";
 
 export default function PhoneCard({ phone }: { phone: Phone }) {
 	return (
-		<div className="flex flex-col gap-3 p-3 w-full bg-blue-100 rounded-lg md:w-64">
+		<div className="flex flex-col gap-3 p-3 w-72 rounded-lg">
 			<Link
 				href={`/items/${phone.id}`}
 				className="flex gap-3 items-center text-xl"
 			>
 				<span className="font-bold">{phone.manufacturer}</span>
 				<span>{phone.model}</span>
+				{phone.available_quantity === 0 && (
+					<span className="text-sm text-error">Нет в наличии</span>
+				)}
 			</Link>
 			<Link className="flex justify-center w-full" href={`/items/${phone.id}`}>
 				<img
-					className="object-cover h-48 rounded-lg transition-all cursor-pointer hover:shadow-xl hover:scale-110 aspect-square"
+					className="object-cover rounded-lg transition-all cursor-pointer hover:shadow-xl hover:scale-110 aspect-square"
 					src={phone.imageLink}
 				/>
 			</Link>
@@ -27,9 +30,6 @@ export default function PhoneCard({ phone }: { phone: Phone }) {
 				</span>
 			</span>
 			<AddToBasketButton phone={phone} />
-			{phone.available_quantity === 0 && (
-				<span className="text-red-500">Нет в наличии</span>
-			)}
 		</div>
 	);
 }

@@ -20,7 +20,7 @@ export default function addToBasketButton({ phone }: { phone: Phone }) {
 	return (
 		<button
 			disabled={phone.available_quantity < 1}
-			className="flex flex-col items-center bg-green-500 disabled:bg-gray-500 btn btn-filled"
+			className="btn btn-filled btn-primary"
 			onClick={() => {
 				dispatch(addItemToBasket(phone));
 				toast(`Товар ${phone.model} добавлен в корзину!`);
@@ -28,9 +28,7 @@ export default function addToBasketButton({ phone }: { phone: Phone }) {
 		>
 			<span>Добавить в корзину</span>
 			{countInBasket > 0 && (
-				<span className="px-3 text-green-500 bg-white rounded-lg">
-					В корзине: {countInBasket}
-				</span>
+				<div className="badge">В корзине: {countInBasket}</div>
 			)}
 		</button>
 	);

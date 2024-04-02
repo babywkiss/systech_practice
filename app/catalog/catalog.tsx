@@ -2,7 +2,8 @@
 
 import { Phone } from "@prisma/client";
 import PhoneCard from "./phone-card";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { IconSearch } from "@tabler/icons-react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,54 +23,76 @@ const CatalogOptions = ({
 	setIsSortAsc: (isSortAsc: boolean) => void;
 }) => {
 	return (
-		<div className="flex flex-col gap-2 py-3 w-full">
-			<input
-				onInput={(e) => {
-					setFilters({
-						...filters,
-						searchQuery: (e.target as HTMLInputElement).value,
-					});
-				}}
-				placeholder="Поиск по названию"
-				className="input"
-			/>
-			<span>Сортировать по</span>
-			<select
-				onChange={(e) => {
-					setIsSortAsc(e.target.value === "asc");
-				}}
-				defaultValue={"asc"}
-			>
-				<option value="asc">По возрастанию цены</option>
-				<option value="desc">По убыванию цены</option>
-			</select>
-			<span>Только в наличии</span>
-			<input
-				type="checkbox"
-				onInput={() => {
-					setFilters({
-						...filters,
-						onlyAvailable: !filters.onlyAvailable,
-					});
-				}}
-				defaultChecked={filters.onlyAvailable}
-			/>
-			<span>Максимальная цена (BYN) {filters.maxPrice}</span>
-			<input
-				onInput={(e) => {
-					setFilters({
-						...filters,
-						maxPrice: Number((e.target as HTMLInputElement).value),
-					});
-				}}
-				value={filters.maxPrice}
-				min="0"
-				max="7000"
-				step="100"
-				type="range"
-			/>
-			<span>0 - 7000 BYN</span>
-		</div>
+		<>
+			<label className="flex gap-2 items-center input input-bordered">
+				<input
+					onInput={(e) => {
+						setFilters({
+							...filters,
+							searchQuery: (e.target as HTMLInputElement).value,
+						});
+					}}
+					type="text"
+					className="grow"
+					placeholder="Поиск по названию"
+				/>
+				<IconSearch size="1rem" />
+			</label>
+			<label className="form-control">
+				<div className="label">
+					<span className="label-text">Сортировать по</span>
+				</div>
+				<select
+					className="select"
+					onChange={(e) => {
+						setIsSortAsc(e.target.value === "asc");
+					}}
+					defaultValue={"asc"}
+				>
+					<option value="asc">По возрастанию цены</option>
+					<option value="desc">По убыванию цены</option>
+				</select>
+			</label>
+			<div className="form-control">
+				<label className="cursor-pointer label">
+					<span className="label-text">Показывать только в наличии</span>
+					<input
+						onInput={() => {
+							setFilters({
+								...filters,
+								onlyAvailable: !filters.onlyAvailable,
+							});
+						}}
+						defaultChecked={filters.onlyAvailable}
+						type="checkbox"
+						className="checkbox"
+					/>
+				</label>
+			</div>
+			<label className="form-control">
+				<div className="label">
+					<span className="label-text">Максимальная цена</span>
+				</div>
+				<input
+					className="range"
+					onInput={(e) => {
+						setFilters({
+							...filters,
+							maxPrice: Number((e.target as HTMLInputElement).value),
+						});
+					}}
+					value={filters.maxPrice}
+					min="0"
+					max="7000"
+					step="100"
+					type="range"
+				/>
+				<div className="flex justify-between">
+					<span className="label-text">0</span>
+					<span className="label-text">{filters.maxPrice}</span>
+				</div>
+			</label>
+		</>
 	);
 };
 
@@ -81,6 +104,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 		onlyAvailable: false,
 	});
 	const [isSortAsc, setIsSortAsc] = useState(true);
+	const itemList = useRef<HTMLDivElement>(null);
 
 	const filterPhones = () => {
 		return phones.filter(
@@ -97,41 +121,36 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 	};
 
 	const filteredPhones = useMemo(() => filterPhones(), [filters, phones]);
-	const getPagesCount = () =>
+
+	const pagesCount =
 		Math.floor(filteredPhones.length / ITEMS_PER_PAGE) +
 		Number(filteredPhones.length % ITEMS_PER_PAGE !== 0);
+	const pagesRange = [page - 2, page - 1, page, page + 1, page + 2].filter(
+		(p) => p >= 0 && p < pagesCount,
+	);
 
 	return (
 		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
-			<details className="flex p-3 w-full h-full bg-blue-100 rounded-lg md:w-1/3">
-				<summary className="text-xl font-bold">Фильтры</summary>
-				<CatalogOptions
-					filters={filters}
-					setFilters={(filters) => {
-						setFilters(filters);
-						setPage(0);
-					}}
-					setIsSortAsc={setIsSortAsc}
-				/>
-			</details>
-			<div className="flex flex-col h-full">
-				<div className="flex items-center p-2">
-					<span>Страница:</span>
-					<div className="flex flex-wrap gap-2 justify-center w-full">
-						{Array.from({ length: getPagesCount() }, (_, i) => (
-							<button
-								key={i}
-								onClick={() => {
-									setPage(i);
-								}}
-								className={`btn ${i === page ? "btn-filled" : "btn-outline"}`}
-							>
-								{i + 1}
-							</button>
-						))}
-					</div>
+			<div className="md:w-1/4 collapse bg-base-200 md:collapse-open">
+				<input type="checkbox" />
+				<div className="text-xl font-medium collapse-title">Фильтры</div>
+				<div className="flex flex-col gap-3 collapse-content">
+					<CatalogOptions
+						filters={filters}
+						setFilters={(filters) => {
+							setFilters(filters);
+							setPage(0);
+							itemList.current?.scrollTo(0, 0);
+						}}
+						setIsSortAsc={setIsSortAsc}
+					/>
 				</div>
-				<div className="flex overflow-auto flex-wrap gap-1 items-center h-full">
+			</div>
+			<div className="flex overflow-auto flex-col flex-1">
+				<div
+					ref={itemList}
+					className="flex overflow-auto flex-col flex-1 gap-1 items-center md:flex-row md:flex-wrap md:justify-center"
+				>
 					{filteredPhones.length > 0 ? (
 						filteredPhones
 							.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
@@ -143,8 +162,47 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 							)
 							.map((phone) => <PhoneCard key={phone.id} phone={phone} />)
 					) : (
-						<span className="text-2xl">Товары не найдены</span>
+						<span className="text-2xl font-bold text-neutral-500">
+							Товары не найдены
+						</span>
 					)}
+				</div>
+
+				<div className="flex justify-center pt-3 w-full">
+					<div className="join">
+						<button
+							disabled={page === 0}
+							onClick={() => {
+								setPage(0);
+								itemList.current?.scrollTo(0, 0);
+							}}
+							className="join-item btn"
+						>
+							«
+						</button>
+						{pagesRange.map((p) => (
+							<button
+								className={`join-item btn ${p === page ? "btn-primary" : ""}`}
+								key={p}
+								onClick={() => {
+									setPage(p);
+									itemList.current?.scrollTo(0, 0);
+								}}
+							>
+								{p + 1}
+							</button>
+						))}
+						<button
+							disabled={page === pagesCount - 1}
+							onClick={() => {
+								setPage(pagesCount - 1);
+								itemList.current?.scrollTo(0, 0);
+							}}
+							className="join-item btn"
+						>
+							»
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

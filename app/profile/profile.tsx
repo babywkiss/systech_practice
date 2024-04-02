@@ -6,6 +6,7 @@ import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
 import { Phone } from "@prisma/client";
 import Link from "next/link";
+import { IconBasket } from "@tabler/icons-react";
 
 const getCountedBasket = (phones: Phone[]) =>
 	Array.from(
@@ -33,66 +34,75 @@ export default function Profile() {
 		dispatch(logoutUser());
 		router.replace("/");
 	};
+
+	const totalBasketPrice =
+		basket.reduce((total, phone) => total + phone.priceBYN, 0) / 100;
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col gap-5 w-full">
 			{user ? (
-				<>
-					<span className="text-xl font-bold">{user.email}</span>
-					<span className="text-xl">
-						Аккаунт создан: {user.created.toString().split("T")[0]}
-					</span>
-					<button onClick={logout} className="bg-red-500 btn btn-filled w-fit">
+				<div className="flex flex-col gap-3 justify-between md:flex-row md:items-center">
+					<div className="flex flex-col gap-3">
+						<span className="text-2xl font-bold">{user.email}</span>
+						<div className="badge badge-info badge-lg">
+							Аккаунт создан: {user.created.toString().split("T")[0]}
+						</div>
+					</div>
+					<button onClick={logout} className="btn btn-error w-fit">
 						Выйти из аккаунта
 					</button>
-				</>
+				</div>
 			) : (
-				<span>Вы не вошли в аккаунт</span>
+				<Link href="/auth/login" className="btn btn-primary">
+					Войти в аккаунт
+				</Link>
 			)}
-			<span className="text-xl font-bold">Ваша корзина</span>
-			{basket.length > 0 ? (
-				<>
-					<button className="bg-green-500 btn btn-filled md:w-fit">
-						Оформить заказ
-					</button>
-					<span className="text-xl font-bold">
-						Общая стоимость:{" "}
-						{basket.reduce((total, phone) => total + phone.priceBYN, 0) / 100}{" "}
-						BYN
+			<div className="flex gap-5 items-center text-neutral-500">
+				<IconBasket className="" size="3rem" />
+				<span className="text-xl font-bold md:text-3xl">Ваша корзина</span>
+				{basket.length > 0 && (
+					<span className="text-2xl font-bold text-success">
+						{totalBasketPrice} BYN
 					</span>
-					<ul className="flex gap-2">
-						{getCountedBasket(basket).map(({ phone, count }) => (
-							<div
-								key={phone.id}
-								className="flex flex-col items-center p-3 bg-blue-200 rounded-lg"
+				)}
+			</div>
+			{basket.length > 0 ? (
+				<div className="flex overflow-auto gap-3 items-center">
+					{getCountedBasket(basket).map(({ phone, count }) => (
+						<div key={phone.id} className="flex flex-col gap-2 shrink-0">
+							<img
+								className="object-cover h-64 rounded-lg aspect-square"
+								src={phone.imageLink}
+							/>
+							<span className="font-bold">
+								{phone.manufacturer} - {phone.model}
+							</span>
+							<Link
+								href={`/items/${phone.id}`}
+								className="btn btn-sm md:btn-md"
 							>
-								<img className="h-32" src={phone.imageLink} />
-								<span>
-									{phone.manufacturer} - {phone.model}
-								</span>
-								<Link
-									href={`/items/${phone.id}`}
-									className="bg-gray-400 btn btn-filled"
-								>
-									Подробнее
-								</Link>
-								<button
-									onClick={() => {
-										dispatch(removeItemFromBasket(phone));
-									}}
-									className="bg-orange-500 btn btn-filled"
-								>
-									Удалить из корзины
-								</button>
-								<span className="font-bold">Штук: {count}</span>
-								<span className="font-bold">
-									Стоимость: {phone.priceBYN / 100} * {count}
-								</span>
-							</div>
-						))}
-					</ul>
-				</>
+								Подробнее
+							</Link>
+							<button
+								onClick={() => {
+									dispatch(removeItemFromBasket(phone));
+								}}
+								className="btn btn-warning btn-sm md:btn-md"
+							>
+								Удалить из корзины
+							</button>
+							<span className="font-bold text-success">
+								Стоимость: {phone.priceBYN / 100} * {count}
+							</span>
+						</div>
+					))}
+				</div>
 			) : (
-				<span>В корзине ничего нет</span>
+				<span className="text-3xl font-bold text-neutral-500">
+					В корзине ничего нет
+				</span>
+			)}
+			{basket.length > 0 && (
+				<button className="btn btn-success">Оформить заказ</button>
 			)}
 		</div>
 	);

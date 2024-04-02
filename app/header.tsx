@@ -1,66 +1,19 @@
 "use client";
 
-import SidePanel from "@/components/side-panel";
-import { IconMenu, IconDeviceMobile, IconBasket } from "@tabler/icons-react";
+import {
+	IconMenu,
+	IconDeviceMobile,
+	IconBasket,
+	IconUser,
+} from "@tabler/icons-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "./store/store";
 import { loginUser } from "./store/userSlice";
-import { Toaster } from "react-hot-toast";
 
-const ProfileInfo = () => {
-	const user = useSelector((state: RootState) => state.user);
-	const basketItemsCount = useSelector(
-		(state: RootState) => state.basket.length,
-	);
-	return user ? (
-		<Link href="/profile" className="flex gap-3 items-center btn btn-outline">
-			<span>{user.email}</span>
-			<div className="flex gap-1">
-				<IconBasket />
-				<span>{basketItemsCount}</span>
-			</div>
-		</Link>
-	) : (
-		<Link className="btn btn-outline" href="/auth/login">
-			Войти в аккаунт
-		</Link>
-	);
-};
-
-const NavMenu = () => {
-	const links = [
-		{ name: "Каталог", href: "/catalog" },
-		{ name: "Мой аккаунт", href: "/profile" },
-	];
-	const [isOpen, setIsOpen] = useState(false);
-	return (
-		<>
-			<button onClick={() => setIsOpen(true)} className="btn btn-filled">
-				<IconMenu />
-			</button>
-			<SidePanel isOpen={isOpen} onClose={() => setIsOpen(false)}>
-				<ul className="flex flex-col gap-3 p-5 w-72">
-					{links.map(({ name, href }) => (
-						<Link
-							key={href}
-							onClick={() => setIsOpen(false)}
-							className="text-blue-500 border-b-2 transition-transform hover:scale-110 border-b-blue-500"
-							href={href}
-						>
-							{name}
-						</Link>
-					))}
-				</ul>
-			</SidePanel>
-		</>
-	);
-};
-
-export default function Header() {
+const useSetUser = () => {
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		fetch("/api/me", {
 			headers: { token: localStorage.getItem("authToken") ?? "" },
@@ -70,17 +23,79 @@ export default function Header() {
 				if (!user.error) dispatch(loginUser(user));
 			});
 	}, []);
+};
+
+const LINKS = [
+	{ name: "Каталог", href: "/catalog" },
+	{ name: "Мой аккаунт", href: "/profile" },
+];
+
+export default function Header() {
+	useSetUser();
+	const user = useSelector((state: RootState) => state.user);
+	const basket = useSelector((state: RootState) => state.basket);
+	const drawerToggleRef = useRef<HTMLInputElement>(null);
 
 	return (
-		<div className="flex justify-between items-center py-2 px-3 font-bold text-white">
-			<Toaster />
-			<a href="/" className="flex gap-2 items-center btn">
-				<IconDeviceMobile />
-				<span className="uppercase">phone shop</span>
-			</a>
-			<div className="flex gap-2 items-center">
-				<ProfileInfo />
-				<NavMenu />
+		<div className="gap-1 navbar bg-base-100">
+			<div className="flex-1">
+				<Link className="btn btn-ghost" href="/">
+					<IconDeviceMobile />
+					PHONE-SHOP
+				</Link>
+			</div>
+			<div className="flex-none">
+				<Link
+					className="invisible md:visible btn btn-primary"
+					href={user ? "/profile" : "/auth/login"}
+				>
+					{user ? (
+						<>
+							<IconUser />
+							{user.email}
+						</>
+					) : (
+						"Войти в аккаунт"
+					)}
+				</Link>
+			</div>
+			<div className="flex-none">
+				<Link className="btn btn-ghost" href="/profile">
+					<IconBasket />
+					<div className="badge badge-secondary">{basket.length}</div>
+				</Link>
+			</div>
+			<div className="flex-none">
+				<div className="drawer drawer-end">
+					<input
+						ref={drawerToggleRef}
+						id="main-drawer"
+						type="checkbox"
+						className="drawer-toggle"
+					/>
+					<div className="drawer-content">
+						<label
+							htmlFor="main-drawer"
+							className="drawer-button btn btn-square btn-ghost"
+						>
+							<IconMenu />
+						</label>
+					</div>
+					<div className="z-10 drawer-side">
+						<label
+							htmlFor="main-drawer"
+							aria-label="close sidebar"
+							className="drawer-overlay"
+						/>
+						<ul className="p-4 w-80 min-h-full menu bg-base-200 text-base-content">
+							{LINKS.map(({ href, name }) => (
+								<li onClick={() => drawerToggleRef.current?.click()} key={href}>
+									<Link href={href}>{name}</Link>
+								</li>
+							))}
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

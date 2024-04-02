@@ -1,14 +1,9 @@
-import Slider from "@/components/slider";
+import AutoSlider from "@/components/autoSlider";
 import prisma from "@/prisma/client";
-import { IconBasket } from "@tabler/icons-react";
+import { IconShoppingBag } from "@tabler/icons-react";
 import Link from "next/link";
-import { FC } from "react";
 
-const Card: FC<{ children: React.ReactNode }> = ({ children }) => {
-	return <div className="p-3 w-full bg-gray-200 rounded-lg">{children}</div>;
-};
-
-export default async function Home() {
+export default async function MainPage() {
 	const mostPopular = await prisma.phone.findMany({
 		include: {
 			_count: {
@@ -24,51 +19,56 @@ export default async function Home() {
 	});
 	const promos = await prisma.promo.findMany();
 	return (
-		<div className="flex flex-col gap-5">
-			<h1 className="text-3xl font-bold text-blue-500">Главная страница</h1>
-			<div className="flex flex-col gap-3 lg:flex-row shrink-0">
-				<Card>
-					<h3 className="text-xl font-bold text-gray-600">Новости и акции</h3>
-					<Slider
-						items={promos.map(({ imageLink }) => (
-							<div className="flex justify-center p-5 w-full">
-								<img className="object-cover w-full h-64" src={imageLink} />
-							</div>
-						))}
-					/>
-				</Card>
-				<Card>
-					<h3 className="text-xl font-bold text-gray-600">Популярные товары</h3>
-					<Slider
-						items={mostPopular.map((phone) => {
-							return (
-								<div className="flex justify-center p-5 w-full">
-									<img
-										className="object-cover w-full h-64"
-										src={phone.imageLink}
-									/>
-									<div className="flex absolute bottom-10 left-10 gap-3 items-center p-3 bg-white rounded-lg">
-										<span className="font-bold">{phone.model}</span>
-										<Link
-											className="btn btn-outline"
-											href={`/items/${phone.id}`}
-										>
-											Посмотреть в каталоге
-										</Link>
+		<main className="flex flex-col gap-5 w-full h-full md:flex-row">
+			<div className="flex flex-col gap-5 p-3 md:w-1/3 md:h-full">
+				<h3 className="text-3xl font-bold">Новости и акции</h3>
+				<AutoSlider className="w-full h-full carousel rounded-box">
+					{promos.map(({ imageLink, id }) => (
+						<div key={id} className="w-full carousel-item">
+							<img className="object-cover" src={imageLink} />
+						</div>
+					))}
+				</AutoSlider>
+			</div>
+			<div className="flex flex-col gap-5 p-3 md:w-1/3 md:h-full">
+				<h3 className="text-3xl font-bold">Популярные товары</h3>
+				<AutoSlider className="w-full h-full carousel rounded-box">
+					{mostPopular.map((phone) => {
+						return (
+							<div key={phone.id} className="w-full carousel-item">
+								<div className="w-full rounded-none card bg-base-100">
+									<figure>
+										<img
+											className="object-cover w-full aspect-square"
+											src={phone.imageLink}
+										/>
+									</figure>
+									<div className="card-body">
+										<h2 className="card-title">
+											{phone.manufacturer} {phone.model}
+										</h2>
+										<div className="justify-end card-actions">
+											<Link
+												href={`/items/${phone.id}`}
+												className="btn btn-primary"
+											>
+												Подробнее
+											</Link>
+										</div>
 									</div>
 								</div>
-							);
-						})}
-					/>
-				</Card>
+							</div>
+						);
+					})}
+				</AutoSlider>
 			</div>
 			<Link
+				className="flex-col gap-3 items-center h-1/2 md:w-1/3 md:h-full btn"
 				href="/catalog"
-				className="flex flex-col justify-center items-center w-64 h-64 btn btn-filled"
 			>
-				<span className="text-3xl font-bold">Перейти в каталог</span>
-				<IconBasket size={"70px"} />
+				<span className="text-5xl font-bold">Каталог</span>
+				<IconShoppingBag size="7rem" />
 			</Link>
-		</div>
+		</main>
 	);
 }
