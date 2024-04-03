@@ -7,23 +7,9 @@ import {
 	IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
 import type { RootState } from "./store/store";
-import { loginUser } from "./store/userSlice";
-
-const useSetUser = () => {
-	const dispatch = useDispatch();
-	useEffect(() => {
-		fetch("/api/me", {
-			headers: { token: localStorage.getItem("authToken") ?? "" },
-		})
-			.then((res) => res.json())
-			.then((user) => {
-				if (!user.error) dispatch(loginUser(user));
-			});
-	}, []);
-};
 
 const LINKS = [
 	{ name: "Каталог", href: "/catalog" },
@@ -31,9 +17,8 @@ const LINKS = [
 ];
 
 export default function Header() {
-	useSetUser();
 	const user = useSelector((state: RootState) => state.user);
-	const basket = useSelector((state: RootState) => state.basket);
+	const basket = useSelector((state: RootState) => state.basket.data);
 	const drawerToggleRef = useRef<HTMLInputElement>(null);
 
 	return (

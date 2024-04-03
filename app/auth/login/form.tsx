@@ -1,16 +1,13 @@
 "use client";
 
-import { loginUser } from "@/app/store/userSlice";
 import { IconKey, IconMail } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
 
 export default function LoginForm() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
-	const dispatch = useDispatch();
 	const router = useRouter();
 
 	const handleSubmit = async (e: FormEvent) => {
@@ -26,16 +23,8 @@ export default function LoginForm() {
 			setError((await response.json()).error);
 			return;
 		}
-		const token = (await response.json()).token;
-		localStorage.setItem("authToken", token);
-		fetch("/api/me", {
-			headers: { token: localStorage.getItem("authToken") ?? "" },
-		})
-			.then((res) => res.json())
-			.then((user) => {
-				if (!user.error) dispatch(loginUser(user));
-			});
 		router.push("/profile");
+		router.refresh();
 	};
 	return (
 		<form

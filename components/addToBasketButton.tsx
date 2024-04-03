@@ -1,18 +1,18 @@
 "use client";
 
-import { addItemToBasket } from "@/app/store/userSlice";
+import { addItemToBasket } from "@/app/store/basketSlice";
 import { Phone } from "@prisma/client";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { RootState } from "@/app/store/store";
 
-const useCountInBasket = (phone: Phone) => {
-	const basket = useSelector((state: RootState) => state.basket);
-	return basket.reduce(
-		(count, p) => (p.id === phone.id ? count + 1 : count),
-		0,
+const useCountInBasket = (phone: Phone) =>
+	useSelector((state: RootState) =>
+		state.basket.data.reduce(
+			(count, p) => (p.id === phone.id ? count + 1 : count),
+			0,
+		),
 	);
-};
 
 export default function addToBasketButton({ phone }: { phone: Phone }) {
 	const dispatch = useDispatch();

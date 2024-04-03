@@ -1,8 +1,9 @@
+import { cookies } from "next/headers";
 import prisma from "@/prisma/client";
 import * as jose from "jose";
 
-export default async function getUser(request: Request) {
-	const token = request.headers.get("token");
+export default async function getUser() {
+	const token = cookies().get("authToken")?.value;
 	if (!token) return null;
 
 	try {

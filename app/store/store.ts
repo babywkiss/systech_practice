@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice";
 import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+import userReducer from "./userSlice";
+import basketReducer from "./basketSlice";
 
 const createNoopStorage = () => {
 	return {
@@ -22,13 +24,16 @@ const storage =
 		? createWebStorage("local")
 		: createNoopStorage();
 
-const userPersistReducer = persistReducer(
-	{ key: "user", storage },
-	userReducer,
+const basketPersistReducer = persistReducer(
+	{ key: "basket", storage },
+	basketReducer,
 );
 
 export const store = configureStore({
-	reducer: userPersistReducer,
+	reducer: {
+		user: userReducer,
+		basket: basketPersistReducer,
+	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({ serializableCheck: false }),
 });

@@ -1,39 +1,15 @@
-import { Phone, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-type UserState = {
-	user: User | null;
-	basket: Phone[];
-};
-
-const initialState: UserState = {
-	user: null,
-	basket: [],
-};
-
 export const userSlice = createSlice({
-	name: "userData",
-	initialState,
+	name: "user",
+	initialState: null as User | null,
 	reducers: {
-		loginUser: (state, action: PayloadAction<User>) => {
-			state.user = action.payload;
-		},
-		logoutUser: (state) => {
-			state.user = null;
-			state.basket = [];
-		},
-		addItemToBasket: (state, action: PayloadAction<Phone>) => {
-			state.basket = [...state.basket, action.payload];
-		},
-		removeItemFromBasket: (state, action: PayloadAction<Phone>) => {
-			const indexToRemove = state.basket.findIndex(
-				(ph) => ph.id === action.payload.id,
-			);
-			if (indexToRemove !== -1) state.basket.splice(indexToRemove, 1);
+		setUser: (_, action: PayloadAction<User | null>) => {
+			return action.payload;
 		},
 	},
 });
 
-export const { loginUser, logoutUser, addItemToBasket, removeItemFromBasket } =
-	userSlice.actions;
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser, removeItemFromBasket } from "../store/userSlice";
+import { removeItemFromBasket } from "../store/basketSlice";
 import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
 import { Phone } from "@prisma/client";
@@ -25,14 +25,14 @@ const getCountedBasket = (phones: Phone[]) =>
 export default function Profile() {
 	// TODO: add pay page
 	const user = useSelector((state: RootState) => state.user);
-	const basket = useSelector((state: RootState) => state.basket);
+	const basket = useSelector((state: RootState) => state.basket.data);
 	const router = useRouter();
 	const dispatch = useDispatch();
 
-	const logout = () => {
-		localStorage.removeItem("authToken");
-		dispatch(logoutUser());
+	const logout = async () => {
+		await fetch("/api/logout");
 		router.replace("/");
+		router.refresh();
 	};
 
 	const totalBasketPrice =
