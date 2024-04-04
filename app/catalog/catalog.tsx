@@ -4,6 +4,9 @@ import { Phone } from "@prisma/client";
 import PhoneCard from "./phone-card";
 import { useMemo, useRef, useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import CreatePhoneButton from "@/components/admin/createPhoneButton";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -105,6 +108,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 	});
 	const [isSortAsc, setIsSortAsc] = useState(true);
 	const itemList = useRef<HTMLDivElement>(null);
+	const isAdmin = useSelector((state: RootState) => state.user?.isAdmin);
 
 	const filterPhones = () => {
 		return phones.filter(
@@ -141,6 +145,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 				<input type="checkbox" />
 				<div className="text-xl font-medium collapse-title">Фильтры</div>
 				<div className="flex flex-col gap-3 collapse-content">
+					{isAdmin && <CreatePhoneButton />}
 					<CatalogOptions
 						filters={filters}
 						setFilters={(filters) => {
