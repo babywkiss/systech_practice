@@ -29,6 +29,14 @@ export default function Header() {
 					PHONE-SHOP
 				</Link>
 			</div>
+			{user?.isSuperAdmin && (
+				<div className="flex-none">
+					<Link className="btn btn-warning" href="/admin">
+						<IconUser />
+						Пользователи
+					</Link>
+				</div>
+			)}
 			<div className="flex-none">
 				<Link
 					className="invisible md:visible btn btn-primary"
