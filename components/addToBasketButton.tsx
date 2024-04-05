@@ -14,7 +14,7 @@ const useCountInBasket = (phone: Phone) =>
 		),
 	);
 
-export default function addToBasketButton({ phone }: { phone: Phone }) {
+export default function AddToBasketButton({ phone }: { phone: Phone }) {
 	const dispatch = useDispatch();
 	const countInBasket = useCountInBasket(phone);
 	return (
