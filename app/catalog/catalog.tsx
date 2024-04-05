@@ -2,7 +2,7 @@
 
 import { Phone } from "@prisma/client";
 import PhoneCard from "./phone-card";
-import { useMemo, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -15,6 +15,8 @@ type Filters = {
 	maxPrice: number;
 	onlyAvailable: boolean;
 };
+
+const MemoizedCreatePhoneButton = memo(CreatePhoneButton);
 
 const CatalogOptions = ({
 	filters,
@@ -110,21 +112,15 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 	const itemList = useRef<HTMLDivElement>(null);
 	const isAdmin = useSelector((state: RootState) => state.user?.isAdmin);
 
-	const filterPhones = () => {
-		return phones.filter(
-			(phone) =>
-				phone.priceBYN / 100 <= filters.maxPrice &&
-				(filters.onlyAvailable ? phone.available_quantity > 0 : true) &&
-				(phone.model
+	const filteredPhones = phones.filter(
+		(phone) =>
+			phone.priceBYN / 100 <= filters.maxPrice &&
+			(filters.onlyAvailable ? phone.available_quantity > 0 : true) &&
+			(phone.model.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+				phone.manufacturer
 					.toLowerCase()
-					.includes(filters.searchQuery.toLowerCase()) ||
-					phone.manufacturer
-						.toLowerCase()
-						.includes(filters.searchQuery.toLowerCase())),
-		);
-	};
-
-	const filteredPhones = useMemo(() => filterPhones(), [filters, phones]);
+					.includes(filters.searchQuery.toLowerCase())),
+	);
 
 	const pagesCount =
 		Math.floor(filteredPhones.length / ITEMS_PER_PAGE) +
@@ -145,7 +141,7 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 				<input type="checkbox" />
 				<div className="text-xl font-medium collapse-title">Фильтры</div>
 				<div className="flex flex-col gap-3 collapse-content">
-					{isAdmin && <CreatePhoneButton />}
+					{isAdmin && <MemoizedCreatePhoneButton />}
 					<CatalogOptions
 						filters={filters}
 						setFilters={(filters) => {
