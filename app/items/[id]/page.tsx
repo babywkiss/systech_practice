@@ -1,4 +1,6 @@
+import getUser from "@/app/api/getUser";
 import AddToBasketButton from "@/components/addToBasketButton";
+import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
 import { IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
 
@@ -9,12 +11,14 @@ export default async function PhonePage({
 		where: { id: Number(params.id) },
 	});
 	if (!phone) return <span>Товар не найден</span>;
+	const isAdmin = (await getUser())?.isAdmin === true;
 	return (
 		<div className="flex flex-col p-3 w-full h-full">
 			<div className="flex flex-col gap-1">
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
 				</span>
+				{isAdmin && <PhoneControl verbose={true} phone={phone} />}
 				<span
 					className={`${
 						phone.available_quantity > 0 ? "text-green-600" : "text-red-500"

@@ -4,11 +4,18 @@ import EditPhoneButton from "./editPhoneButton";
 
 // TODO: Implement phone edit
 
-export default function PhoneControl({ phone }: { phone: Phone }) {
+export default function PhoneControl({
+	phone,
+	verbose = false,
+}: { phone: Phone; verbose?: boolean }) {
 	return (
 		<div className="flex gap-2 items-center">
-			<DeletePhoneButton phone={phone} />
-			<EditPhoneButton phone={phone} />
+			<DeletePhoneButton phone={phone}>
+				{verbose && "Удалить"}
+			</DeletePhoneButton>
+			<EditPhoneButton phone={phone}>
+				{verbose && "Редактировать"}
+			</EditPhoneButton>
 		</div>
 	);
 }

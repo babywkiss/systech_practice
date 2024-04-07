@@ -1,10 +1,15 @@
+"use client";
+
 import { IconEdit } from "@tabler/icons-react";
 import PhoneEdit from "./PhoneEdit";
 import { Phone } from "@prisma/client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function EditPhoneButton({ phone }: { phone: Phone }) {
+export default function EditPhoneButton({
+	phone,
+	children,
+}: { phone: Phone; children?: React.ReactNode }) {
 	const router = useRouter();
 	const getDefault = (phone: Phone) => ({
 		...phone,
@@ -31,9 +36,12 @@ export default function EditPhoneButton({ phone }: { phone: Phone }) {
 				onClick={() => {
 					modalRef.current?.showModal();
 				}}
-				className="btn btn-info btn-square btn-sm btn-outline"
+				className={`btn btn-info ${
+					children ? "" : "btn-square"
+				} btn-sm btn-outline`}
 			>
 				<IconEdit />
+				{children}
 			</button>
 
 			<dialog ref={modalRef} className="modal">

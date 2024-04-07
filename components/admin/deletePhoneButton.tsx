@@ -1,9 +1,14 @@
+"use client";
+
 import { Phone } from "@prisma/client";
 import { IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-export default function DeletePhoneButton({ phone }: { phone: Phone }) {
+export default function DeletePhoneButton({
+	phone,
+	children,
+}: { phone: Phone; children?: React.ReactNode }) {
 	const modalRef = useRef<HTMLDialogElement>(null);
 	const router = useRouter();
 
@@ -20,9 +25,12 @@ export default function DeletePhoneButton({ phone }: { phone: Phone }) {
 				onClick={() => {
 					modalRef.current?.showModal();
 				}}
-				className="btn btn-error btn-square btn-sm btn-outline"
+				className={`btn btn-error ${
+					children ? "" : "btn-square"
+				} btn-sm btn-outline`}
 			>
 				<IconTrash />
+				{children}
 			</button>
 			<dialog ref={modalRef} className="modal">
 				<div className="modal-box">
