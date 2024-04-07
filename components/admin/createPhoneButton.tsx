@@ -20,17 +20,17 @@ export default function CreatePhoneButton() {
 			});
 	};
 	return (
-		<>
+		<div className="flex group">
 			<button
 				onClick={() => {
 					modalRef.current?.showModal();
 				}}
-				className="btn btn-info"
+				className="w-full btn btn-info"
 			>
 				Создать новый телефон
 				<IconPlus />
 			</button>
-			<dialog ref={modalRef} className="modal">
+			<dialog ref={modalRef} className="invisible group-hover:visible modal">
 				<div className="flex overflow-auto flex-col gap-2 modal-box [&>*]:shrink-0">
 					<h3 className="text-lg font-bold">Создать новый товар</h3>
 					<PhoneEdit phone={phone} setPhone={setPhone} />
@@ -44,6 +44,6 @@ export default function CreatePhoneButton() {
 					</div>
 				</div>
 			</dialog>
-		</>
+		</div>
 	);
 }

@@ -11,7 +11,7 @@ export default function PhoneCard({ phone }: { phone: Phone }) {
 	const isAdmin = useSelector((state: RootState) => state.user?.isAdmin);
 
 	return (
-		<div className="flex flex-col gap-3 p-3 w-full rounded-lg bg-base-200 md:w-fit hover:bg-base-100">
+		<div className="flex flex-col gap-3 p-3 w-full rounded-lg md:w-80 bg-base-200 hover:bg-base-100">
 			<div className="flex justify-between items-center group">
 				<Link
 					href={`/items/${phone.id}`}
