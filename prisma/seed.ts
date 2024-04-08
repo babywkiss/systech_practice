@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "./client";
+import bcrypt from "bcrypt";
 
 const randIntInRange = (min: number, max: number) => {
 	return Math.floor(min + Math.random() * (max - min));
@@ -45,6 +46,18 @@ const createRandomPhone = (): Prisma.PhoneCreateInput => {
 };
 
 async function main() {
+	// Create root admin
+	if (!process.env.SUPER_ADMIN_EMAIL) throw "Provide super admin email in .env";
+	if (!process.env.SUPER_ADMIN_PASSWORD)
+		throw "Provide super admin password in .env";
+	await prisma.user.create({
+		data: {
+			email: process.env.SUPER_ADMIN_EMAIL,
+			passwordHash: await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, 10),
+			isAdmin: true,
+			isSuperAdmin: true,
+		},
+	});
 	const promoLinks = [
 		"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F7%2F75%2FCute_grey_kitten.jpg&f=1&nofb=1&ipt=dd50fb436cdb44d482b45475c03f4a4a5c33e6f91bfb36abaa266e08f799a42c&ipo=images",
 		"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.itl.cat%2Fpngfile%2Fbig%2F206-2063899_cute-kitten-images-hd.jpg&f=1&nofb=1&ipt=fc3197f023316bd66d0f9a75332559d6b103faffea55a97c95e33995886f450d&ipo=images",
