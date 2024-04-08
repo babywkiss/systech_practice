@@ -20,7 +20,7 @@ export default async function AdminPage() {
 				</thead>
 				<tbody>
 					{users.map((u) => (
-						<tr>
+						<tr key={u.id}>
 							<th>{u.id}</th>
 							<th>{u.email}</th>
 							<th className="flex gap-5 items-center">
