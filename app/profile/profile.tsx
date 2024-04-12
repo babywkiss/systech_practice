@@ -23,7 +23,6 @@ export const getCountedBasket = (phones: Phone[]) =>
 	);
 
 export default function Profile() {
-	// TODO: add pay page
 	const user = useSelector((state: RootState) => state.user);
 	const basket = useSelector((state: RootState) => state.basket.data);
 	const router = useRouter();

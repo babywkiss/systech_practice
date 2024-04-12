@@ -2,8 +2,6 @@ import { Phone } from "@prisma/client";
 import DeletePhoneButton from "./deletePhoneButton";
 import EditPhoneButton from "./editPhoneButton";
 
-// TODO: Implement phone edit
-
 export default function PhoneControl({
 	phone,
 	verbose = false,
