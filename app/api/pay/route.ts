@@ -3,13 +3,16 @@ import getUser from "../getUser";
 import stripe from "./stripe";
 import prisma from "@/prisma/client";
 
+type Basket = { count: number; phone: Phone }[];
+
 export async function POST(request: Request) {
 	const user = await getUser();
 	if (!user) return Response.json({ error: "Not authorized" }, { status: 500 });
 
 	let totalPrice = 0;
+	let basket = null as null | Basket;
 	try {
-		const basket = (await request.json()) as { count: number; phone: Phone }[];
+		basket = (await request.json()) as Basket;
 		// TODO: Validate basket schmea before iteration
 		for (const { count, phone } of basket) {
 			const found = await prisma.phone.findUnique({ where: { id: phone.id } });
@@ -30,6 +33,11 @@ export async function POST(request: Request) {
 		currency: "byn",
 		automatic_payment_methods: {
 			enabled: true,
+		},
+		metadata: {
+			basket: JSON.stringify(
+				basket.map((b) => ({ count: b.count, id: b.phone.id })),
+			),
 		},
 	});
 	return Response.json({ client_secret: paymentIntent.client_secret });

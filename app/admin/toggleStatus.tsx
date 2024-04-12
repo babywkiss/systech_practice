@@ -15,13 +15,15 @@ export default function ToggleStatus({
 			});
 	};
 	return (
-		<button
-			onClick={() => {
-				handleToggle(user.id);
-			}}
-			className="btn btn-warning"
-		>
-			{user.isAdmin ? "Отключить" : "Сделать администратором"}
-		</button>
+		<>
+			<input
+				type="checkbox"
+				className="toggle toggle-warning"
+				onInput={() => {
+					handleToggle(user.id);
+				}}
+				checked={user.isAdmin}
+			/>
+		</>
 	);
 }

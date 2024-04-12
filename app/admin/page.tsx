@@ -24,8 +24,8 @@ export default async function AdminPage() {
 							<td>{u.id}</td>
 							<td>{u.email}</td>
 							<td className="flex gap-5 items-center">
-								<span>{u.isAdmin ? "Администратор" : "Нет"}</span>
 								<ToggleStatus user={u} />
+								<span>{u.isAdmin ? "Администратор" : "Нет"}</span>
 							</td>
 						</tr>
 					))}

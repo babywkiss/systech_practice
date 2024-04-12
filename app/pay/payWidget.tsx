@@ -8,24 +8,36 @@ import {
 import { IconCheck, IconExclamationMark } from "@tabler/icons-react";
 import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { resetBasket } from "../store/basketSlice";
 
 export default function PayWidget() {
 	const stripe = useStripe();
 	const elements = useElements();
 	const modalRef = useRef<HTMLDialogElement>(null);
 	const [error, setError] = useState("");
+	const dispatch = useDispatch();
 
 	const handleSubmit = async (e: FormEvent) => {
 		if (!stripe || !elements) return;
 		e.preventDefault();
-		const { error } = await stripe?.confirmPayment({
+		const { error, paymentIntent } = await stripe?.confirmPayment({
 			elements,
-			confirmParams: {
-				return_url: "https://localhost:3000",
-			},
+			confirmParams: {},
 			redirect: "if_required",
 		});
-		if (error) setError(error.message ?? "");
+		if (error) {
+			setError(error.message ?? "");
+		} else {
+			const resp = await fetch("/api/orders", {
+				method: "POST",
+				body: JSON.stringify({
+					paymentId: paymentIntent.id,
+				}),
+			});
+			console.log(resp);
+		}
+		dispatch(resetBasket());
 		modalRef.current?.showModal();
 	};
 
