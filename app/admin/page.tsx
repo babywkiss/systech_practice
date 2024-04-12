@@ -21,12 +21,12 @@ export default async function AdminPage() {
 				<tbody>
 					{users.map((u) => (
 						<tr key={u.id}>
-							<th>{u.id}</th>
-							<th>{u.email}</th>
-							<th className="flex gap-5 items-center">
+							<td>{u.id}</td>
+							<td>{u.email}</td>
+							<td className="flex gap-5 items-center">
 								<span>{u.isAdmin ? "Администратор" : "Нет"}</span>
 								<ToggleStatus user={u} />
-							</th>
+							</td>
 						</tr>
 					))}
 				</tbody>

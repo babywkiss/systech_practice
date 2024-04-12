@@ -22,11 +22,9 @@ export default function SignUpForm() {
 		if (response.status !== 200) {
 			setError((await response.json()).error);
 			return;
-		} else {
-			// TODO: move this login in separate file for reusability
-			router.push("/profile");
-			router.refresh();
 		}
+		router.push("/profile");
+		router.refresh();
 	};
 	return (
 		<form onSubmit={handleSubmit} className="flex flex-col gap-3 items-center">
