@@ -11,7 +11,6 @@ export default async function ProfilePage() {
 			where: { customerId: user.id },
 			include: { items: true },
 		});
-	console.log(orders);
 	return (
 		<div className="flex flex-col gap-3">
 			<Profile />
