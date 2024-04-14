@@ -1,75 +1,121 @@
 "use client";
 
-import {
-	PaymentElement,
-	useElements,
-	useStripe,
-} from "@stripe/react-stripe-js";
-import { IconCheck, IconExclamationMark } from "@tabler/icons-react";
-import Link from "next/link";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { CreatePaymentMethodFromElement } from "@stripe/stripe-js";
 import { FormEvent, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { getCountedBasket } from "../profile/profile";
+import { useRouter } from "next/navigation";
 import { resetBasket } from "../store/basketSlice";
 
 export default function PayWidget() {
+	const router = useRouter();
 	const stripe = useStripe();
 	const elements = useElements();
-	const modalRef = useRef<HTMLDialogElement>(null);
-	const [error, setError] = useState("");
-	const dispatch = useDispatch();
 
-	const handleSubmit = async (e: FormEvent) => {
-		if (!stripe || !elements) return;
-		e.preventDefault();
-		const { error, paymentIntent } = await stripe?.confirmPayment({
-			elements,
-			confirmParams: {},
-			redirect: "if_required",
-		});
-		if (error) {
-			setError(error.message ?? "");
-		} else {
-			const resp = await fetch("/api/orders", {
+	const dispatch = useDispatch();
+	const basket = useSelector((state: RootState) => state.basket.data);
+	const countedBasket = getCountedBasket(basket);
+
+	const modal = useRef<HTMLDialogElement>(null);
+
+	const [error, setError] = useState("");
+	const [hint, setHint] = useState("");
+	const [loading, setLoading] = useState(false);
+
+	const handleServerResponse = async (res: any) => {
+		if (res.error) {
+			setError("Произошла ошибка");
+			modal.current?.showModal();
+			return;
+		}
+		if (res.requires_action && stripe) {
+			const { error: errorAction, paymentIntent } =
+				await stripe.handleCardAction(res.payment_intent_client_secret);
+			if (errorAction) {
+				setError("Произошла ошибка");
+				modal.current?.showModal();
+				return;
+			}
+			const serverResponse = await fetch("/api/pay", {
 				method: "POST",
 				body: JSON.stringify({
-					paymentId: paymentIntent.id,
+					payment_intent_id: paymentIntent.id,
+					basket: countedBasket,
 				}),
 			});
-			console.log(resp);
+			await handleServerResponse(await serverResponse.json());
+		} else {
+			setError("");
+			dispatch(resetBasket());
+			modal?.current?.showModal();
 		}
-		dispatch(resetBasket());
-		modalRef.current?.showModal();
+	};
+
+	const handleSubmit = async (e: FormEvent) => {
+		setLoading(true);
+		e.preventDefault();
+		if (!stripe || !elements) return;
+
+		const result = await stripe.createPaymentMethod({
+			type: "card",
+			card: elements.getElement(CardElement),
+		} as unknown as CreatePaymentMethodFromElement);
+
+		if (result.error) {
+			setHint(result.error?.message ?? "");
+		} else {
+			const response = await fetch("/api/pay", {
+				method: "POST",
+				body: JSON.stringify({
+					payment_method_id: result.paymentMethod.id,
+					basket: countedBasket,
+				}),
+			});
+			const paymentResponse = await response.json();
+			await handleServerResponse(paymentResponse);
+		}
+		setLoading(false);
 	};
 
 	return (
 		<form
-			id="payment-form"
-			className="flex flex-col gap-3 items-center w-full md:w-1/2"
 			onSubmit={handleSubmit}
+			className="flex flex-col gap-8 p-3 w-full rounded-lg md:w-96 bg-base-100"
 		>
-			<PaymentElement id="payment-element" />
-			<button className="btn btn-success">Оплатить</button>
-			<dialog ref={modalRef} id="my_modal_1" className="modal">
+			<label className="flex flex-col gap-8">
+				Введите данные для оплаты
+				<div className="p-3 rounded-lg bg-base-200">
+					<CardElement />
+				</div>
+				<span className="text-sm text-error">{hint}</span>
+			</label>
+			{loading ? (
+				<span className="loading loading-spinner loading-md"></span>
+			) : (
+				<button className="btn btn-success">Оплатить</button>
+			)}
+			<dialog ref={modal} className="modal">
 				<div className="modal-box">
-					<h3 className="text-lg font-bold"></h3>
-					<p className="py-4">
-						{error ? (
-							<span className="font-bold text-error">
-								<IconExclamationMark />
-								{`Произошла ошибка: ${error}`}
-							</span>
-						) : (
-							<span className="font-bold text-success">
-								<IconCheck />
-								Оплата прошла успешно
-							</span>
-						)}
-					</p>
+					<h3
+						className={`text-lg font-bold ${
+							error ? "text-error" : "text-success"
+						}`}
+					>
+						{error || "Оплата прошла успешно"}
+					</h3>
 					<div className="modal-action">
 						<form method="dialog">
-							<Link href="/profile">
-								<button className="btn">Продолжить</button>
-							</Link>
+							<button
+								onClick={() => {
+									router.replace("/profile");
+									router.refresh();
+								}}
+								className="btn"
+							>
+								Продолжить
+							</button>
 						</form>
 					</div>
 				</div>
