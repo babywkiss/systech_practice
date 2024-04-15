@@ -9,13 +9,12 @@ export default function CreatePhoneButton() {
 	const router = useRouter();
 
 	const handleAdd = () => {
-		fetch("/api/phones/add", {
+		fetch("/api/phones/", {
 			method: "POST",
 			body: JSON.stringify({ ...phone, priceBYN: phone.priceBYN * 100 }),
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				const id = data?.id;
+			.then((data) => data.text())
+			.then((id) => {
 				router.push(`/items/${id}`);
 			});
 	};

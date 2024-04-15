@@ -22,13 +22,10 @@ export default function EditPhoneButton({
 		fetch(`/api/phones/${phone.id}`, {
 			method: "PATCH",
 			body: JSON.stringify({ ...newPhone, priceBYN: newPhone.priceBYN * 100 }),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				const id = data?.id;
-				router.push(`/items/${id}`);
-				router.refresh();
-			});
+		}).then(() => {
+			router.push(`/items/${phone.id}`);
+			router.refresh();
+		});
 	};
 	return (
 		<>

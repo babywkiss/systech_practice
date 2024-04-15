@@ -17,19 +17,6 @@ export async function DELETE(
 	return Response.json({ success: true }, { status: 200 });
 }
 
-export async function POST(request: Request) {
-	const user = await extractUser();
-	if (!user?.isAdmin) return errorResponse("Not authorized", 403);
-
-	const data = await tryOrNull(request.json());
-	if (!data) return errorResponse("Неккоректный формат данных", 400);
-
-	const phone = await tryOrNull(prisma.phone.create({ data }));
-	if (!phone) return errorResponse("Неккоректные данные", 400);
-
-	return new Response(null, { status: 201 });
-}
-
 export async function PATCH(
 	request: Request,
 	{ params: { id } }: { params: { id: string } },
