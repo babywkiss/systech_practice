@@ -7,11 +7,9 @@ import toast from "react-hot-toast";
 import { RootState } from "@/app/store/store";
 
 const useCountInBasket = (phone: Phone) =>
-	useSelector((state: RootState) =>
-		state.basket.data.reduce(
-			(count, p) => (p.id === phone.id ? count + 1 : count),
-			0,
-		),
+	useSelector(
+		(state: RootState) =>
+			state.basket.data.find((data) => data.phone.id === phone.id)?.count ?? 0,
 	);
 
 export default function AddToBasketButton({ phone }: { phone: Phone }) {
@@ -19,7 +17,10 @@ export default function AddToBasketButton({ phone }: { phone: Phone }) {
 	const countInBasket = useCountInBasket(phone);
 	return (
 		<button
-			disabled={phone.available_quantity < 1}
+			disabled={
+				phone.available_quantity < 1 ||
+				phone.available_quantity <= countInBasket
+			}
 			className="btn btn-filled btn-success"
 			onClick={() => {
 				dispatch(addItemToBasket(phone));

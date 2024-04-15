@@ -2,13 +2,15 @@
 
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { getCountedBasket } from "../profile/profile";
 
 export default function CheckoutTotal() {
 	const basket = useSelector((state: RootState) => state.basket.data);
-	const countedBasket = getCountedBasket(basket);
+
 	const totalBasketPrice =
-		basket.reduce((total, phone) => total + phone.priceBYN, 0) / 100;
+		basket.reduce(
+			(total, { phone, count }) => total + phone.priceBYN * count,
+			0,
+		) / 100;
 	return (
 		<div className="flex flex-col gap-3 items-center p-3 rounded-lg bg-base-100">
 			<table className="table">
@@ -20,7 +22,7 @@ export default function CheckoutTotal() {
 					</tr>
 				</thead>
 				<tbody>
-					{countedBasket.map(({ phone, count }) => (
+					{basket.map(({ phone, count }) => (
 						<tr key={phone.id}>
 							<td>
 								{phone.manufacturer} {phone.model}

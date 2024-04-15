@@ -12,15 +12,15 @@ export default function LoginForm() {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const response = await fetch("/api/login", {
+		const response = await fetch("/api/users/login", {
 			method: "POST",
 			body: JSON.stringify({
 				email,
 				password,
 			}),
 		});
-		if (response.status !== 200) {
-			setError((await response.json()).error);
+		if (!response.ok) {
+			setError((await response.json()).error.message);
 			return;
 		}
 		router.push("/profile");

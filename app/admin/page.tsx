@@ -1,9 +1,9 @@
 import prisma from "@/prisma/client";
-import getUser from "../api/getUser";
 import ToggleStatus from "./toggleStatus";
+import { extractUser } from "../api/auth";
 
 export default async function AdminPage() {
-	const user = await getUser();
+	const user = await extractUser();
 	if (!user?.isSuperAdmin) return null;
 	const users = (await prisma.user.findMany()).map(
 		({ id, isAdmin, email }) => ({ id, isAdmin, email }),

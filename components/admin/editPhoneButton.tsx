@@ -19,8 +19,8 @@ export default function EditPhoneButton({
 	const modalRef = useRef<HTMLDialogElement>(null);
 
 	const handleConfirm = () => {
-		fetch("/api/phones/edit", {
-			method: "PUT",
+		fetch(`/api/phones/${phone.id}`, {
+			method: "PATCH",
 			body: JSON.stringify({ ...newPhone, priceBYN: newPhone.priceBYN * 100 }),
 		})
 			.then((res) => res.json())

@@ -1,4 +1,4 @@
-import getUser from "@/app/api/getUser";
+import { extractUser } from "@/app/api/auth";
 import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
@@ -11,7 +11,7 @@ export default async function PhonePage({
 		where: { id: Number(params.id) },
 	});
 	if (!phone) return <span>Товар не найден</span>;
-	const isAdmin = (await getUser())?.isAdmin === true;
+	const isAdmin = (await extractUser())?.isAdmin === true;
 	return (
 		<div className="flex flex-col p-3 w-full h-full">
 			<div className="flex flex-col gap-1">

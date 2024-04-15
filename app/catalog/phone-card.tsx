@@ -23,7 +23,7 @@ export default function PhoneCard({ phone }: { phone: Phone }) {
 						<span className="text-sm text-error">Нет в наличии</span>
 					)}
 				</Link>
-				<div className="invisible group-hover:visible">
+				<div className="md:invisible group-hover:visible">
 					{isAdmin && <PhoneControl phone={phone} />}
 				</div>
 			</div>

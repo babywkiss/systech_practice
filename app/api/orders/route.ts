@@ -1,13 +1,13 @@
 import { Phone } from "@prisma/client";
-import getUser from "../getUser";
 import stripe from "./stripe";
 import prisma from "@/prisma/client";
 import { PaymentIntent } from "@stripe/stripe-js";
+import { extractUser } from "../auth";
 
 type Basket = { count: number; phone: Phone }[];
 
 export async function POST(request: Request) {
-	const user = await getUser();
+	const user = await extractUser();
 	if (!user) return Response.json({ error: "Not authorized" }, { status: 500 });
 
 	let totalPrice = 0;

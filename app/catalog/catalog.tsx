@@ -19,10 +19,12 @@ type Filters = {
 const MemoizedCreatePhoneButton = memo(CreatePhoneButton);
 
 const CatalogOptions = ({
+	isSortAsc,
 	filters,
 	setFilters,
 	setIsSortAsc,
 }: {
+	isSortAsc: boolean;
 	filters: Filters;
 	setFilters: (filters: Filters) => void;
 	setIsSortAsc: (isSortAsc: boolean) => void;
@@ -37,6 +39,7 @@ const CatalogOptions = ({
 							searchQuery: (e.target as HTMLInputElement).value,
 						});
 					}}
+					value={filters.searchQuery}
 					type="text"
 					className="grow"
 					placeholder="Поиск по названию"
@@ -52,7 +55,7 @@ const CatalogOptions = ({
 					onChange={(e) => {
 						setIsSortAsc(e.target.value === "asc");
 					}}
-					defaultValue={"asc"}
+					defaultValue={isSortAsc ? "asc" : "desc"}
 				>
 					<option value="asc">По возрастанию цены</option>
 					<option value="desc">По убыванию цены</option>
@@ -101,14 +104,27 @@ const CatalogOptions = ({
 	);
 };
 
+const useSessionStorage = <T,>(key: string, initial: T) => {
+	const restoredValue: T =
+		JSON.parse(sessionStorage.getItem(key) ?? "null") ?? initial;
+	const [value, setValue] = useState(restoredValue);
+	return [
+		value,
+		(value: T) => {
+			sessionStorage.setItem(key, JSON.stringify(value));
+			setValue(value);
+		},
+	] as const;
+};
+
 export default function Catalog({ phones }: { phones: Phone[] }) {
-	const [page, setPage] = useState(0);
-	const [filters, setFilters] = useState({
+	const [page, setPage] = useSessionStorage("catalogPage", 0);
+	const [filters, setFilters] = useSessionStorage("catalogFilters", {
 		searchQuery: "",
 		maxPrice: 7000,
 		onlyAvailable: false,
 	});
-	const [isSortAsc, setIsSortAsc] = useState(true);
+	const [isSortAsc, setIsSortAsc] = useSessionStorage("catalogSort", true);
 	const itemList = useRef<HTMLDivElement>(null);
 	const isAdmin = useSelector((state: RootState) => state.user?.isAdmin);
 
@@ -143,11 +159,12 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 				<div className="flex flex-col gap-3 collapse-content">
 					{isAdmin && <MemoizedCreatePhoneButton />}
 					<CatalogOptions
+						isSortAsc={isSortAsc}
 						filters={filters}
 						setFilters={(filters) => {
 							setFilters(filters);
 							setPage(0);
-							itemList.current?.scrollTo(0, 0);
+							itemList.current?.scrollTo({ top: 0, behavior: "smooth" });
 						}}
 						setIsSortAsc={setIsSortAsc}
 					/>

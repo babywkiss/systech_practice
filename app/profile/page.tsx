@@ -1,10 +1,10 @@
 import prisma from "@/prisma/client";
 import Profile from "./profile";
-import getUser from "../api/getUser";
 import { Order, Phone } from "@prisma/client";
+import { extractUser } from "../api/auth";
 
 export default async function ProfilePage() {
-	const user = await getUser();
+	const user = await extractUser();
 	let orders = [] as (Order & { items: Phone[] })[];
 	if (user)
 		orders = await prisma.order.findMany({

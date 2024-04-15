@@ -4,23 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeItemFromBasket } from "../store/basketSlice";
 import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
-import { Phone } from "@prisma/client";
 import Link from "next/link";
 import { IconBasket } from "@tabler/icons-react";
-
-export const getCountedBasket = (phones: Phone[]) =>
-	Array.from(
-		phones
-			.reduce(
-				(basket, phone) =>
-					basket.set(phone.id, {
-						phone,
-						count: (basket.get(phone.id)?.count ?? 0) + 1,
-					}),
-				new Map<number, { phone: Phone; count: number }>(),
-			)
-			.values(),
-	);
 
 export default function Profile() {
 	const user = useSelector((state: RootState) => state.user);
@@ -29,13 +14,16 @@ export default function Profile() {
 	const dispatch = useDispatch();
 
 	const logout = async () => {
-		await fetch("/api/logout");
+		await fetch("/api/users/logout");
 		router.replace("/");
 		router.refresh();
 	};
 
 	const totalBasketPrice =
-		basket.reduce((total, phone) => total + phone.priceBYN, 0) / 100;
+		basket.reduce(
+			(total, { phone, count }) => total + phone.priceBYN * count,
+			0,
+		) / 100;
 
 	return (
 		<div className="flex flex-col gap-5 w-full">
@@ -73,7 +61,7 @@ export default function Profile() {
 			</div>
 			{basket.length > 0 ? (
 				<div className="flex overflow-auto gap-3 items-center">
-					{getCountedBasket(basket).map(({ phone, count }) => (
+					{basket.map(({ phone, count }) => (
 						<div key={phone.id} className="flex flex-col gap-2 shrink-0">
 							<img
 								className="object-cover h-48 rounded-lg aspect-square"

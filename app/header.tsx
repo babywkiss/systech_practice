@@ -55,7 +55,9 @@ export default function Header() {
 			<div className="flex-none">
 				<Link className="btn btn-ghost" href="/profile">
 					<IconBasket />
-					<div className="badge badge-secondary">{basket.length}</div>
+					<div className="badge badge-secondary">
+						{basket.reduce((total, { count }) => total + count, 0)}
+					</div>
 				</Link>
 			</div>
 			<div className="flex-none">
