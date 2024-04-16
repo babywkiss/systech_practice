@@ -39,7 +39,12 @@ export default function CredentialsForm({
 				</label>
 				<label className="flex gap-2 items-center w-4/5 input md:w-fit">
 					<IconKey />
-					<input name="password" type="password" placeholder="Пароль" />
+					<input
+						minLength={7}
+						name="password"
+						type="password"
+						placeholder="Пароль"
+					/>
 				</label>
 				{children ?? (
 					<button type="submit" className="w-4/5 btn btn-primary md:w-fit">

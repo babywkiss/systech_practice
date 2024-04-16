@@ -26,24 +26,32 @@ export const isCredentials = (data: unknown): data is Credentials => {
 	);
 };
 
-export const createToken = (user: User) => {
-	return new jose.SignJWT({ id: user.id })
+export const createToken = (
+	user: User,
+	expirationTime = "10h",
+	extraPayload = {} as any,
+) => {
+	return new jose.SignJWT({ id: user.id, ...extraPayload })
 		.setProtectedHeader({ alg: "HS256" })
 		.setIssuedAt()
-		.setExpirationTime("10h")
+		.setExpirationTime(expirationTime)
 		.sign(new TextEncoder().encode(process.env.SECRET_JWT));
 };
 
-export const extractUser = async () => {
-	const token = cookies().get("authToken")?.value;
-	if (!token) return null;
-
-	const data = await tryOrNull(
+export const decodeToken = (token: string) =>
+	tryOrNull(
 		jose.jwtVerify(
 			token,
 			new TextEncoder().encode(process.env.SECRET_JWT ?? ""),
 		),
 	);
+
+export const extractUser = async () => {
+	const token = cookies().get("authToken")?.value;
+	if (!token) return null;
+
+	const data = await decodeToken(token);
+
 	const id = data?.payload?.id;
 	if (typeof id !== "number") return null;
 

@@ -35,7 +35,7 @@ export default function BasketList() {
 								onClick={() => {
 									dispatch(removeItemFromBasket(phone));
 								}}
-								className="btn btn-warning btn-sm"
+								className="btn btn-error btn-sm"
 							>
 								Удалить из корзины
 							</button>
