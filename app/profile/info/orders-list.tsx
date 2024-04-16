@@ -1,9 +1,8 @@
+import { extractUser } from "@/app/api/auth";
 import prisma from "@/prisma/client";
-import Profile from "./profile";
 import { Order, Phone } from "@prisma/client";
-import { extractUser } from "../api/auth";
 
-export default async function ProfilePage() {
+export default async function OrdersList() {
 	const user = await extractUser();
 	let orders = [] as (Order & { items: Phone[] })[];
 	if (user)
@@ -11,15 +10,12 @@ export default async function ProfilePage() {
 			where: { customerId: user.id },
 			include: { items: true },
 		});
+
 	return (
-		<div className="flex flex-col gap-3">
-			<Profile />
+		<div className="flex overflow-auto flex-col gap-3 w-full h-full">
 			{orders.length > 0 && user && (
-				<div className="flex flex-col gap-3 p-3 bg-base-100">
-					<span className="text-xl font-bold text-neutral-500">
-						Ваши заказы
-					</span>
-					<div className="flex flex-col gap-2">
+				<div className="flex overflow-auto flex-col gap-3 p-3 w-full h-full bg-base-100">
+					<div className="flex overflow-auto flex-col gap-2 w-full h-full">
 						{orders.map((o) => (
 							<div className="flex p-3 bg-base-200" key={o.id}>
 								<span className="flex gap-3 items-center">

@@ -107,7 +107,7 @@ export default function PayWidget() {
 						<form method="dialog">
 							<button
 								onClick={() => {
-									router.replace("/profile");
+									router.replace("/profile/info");
 									router.refresh();
 								}}
 								className="btn"

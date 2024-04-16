@@ -3,6 +3,7 @@ import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
 import { IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
+import Image from "next/image";
 
 export default async function PhonePage({
 	params,
@@ -30,10 +31,15 @@ export default async function PhonePage({
 				</span>
 			</div>
 			<div className="flex flex-col gap-5 w-full h-full md:flex-row">
-				<img
-					className="object-cover h-96 rounded-lg aspect-square"
-					src={phone.imageLink}
-				/>
+				<div className="relative h-96 aspect-square">
+					<Image
+						alt="Phone Photo"
+						fill
+						sizes="100vw"
+						className="object-cover rounded-lg"
+						src={phone.imageLink}
+					/>
+				</div>
 				<ul className="flex flex-col gap-3 w-full">
 					<li className="flex p-3 w-full rounded-lg bg-base-100">
 						<span className="break-all">{phone.description}</span>

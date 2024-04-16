@@ -1,134 +1,17 @@
 "use client";
 
-import { Phone } from "@prisma/client";
-import PhoneCard from "./phone-card";
-import { memo, useRef, useState } from "react";
-import { IconSearch } from "@tabler/icons-react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { Phone, User } from "@prisma/client";
 import CreatePhoneButton from "@/components/admin/createPhoneButton";
+import PagesBar from "./pages-bar";
+import { useSessionStorage } from "../utils";
+import OptionsPanel, { Filters } from "./options-panel";
+import { useRef } from "react";
+import PhoneCard from "./phone-card";
 
 const ITEMS_PER_PAGE = 10;
 
-type Filters = {
-	searchQuery: string;
-	maxPrice: number;
-	onlyAvailable: boolean;
-};
-
-const MemoizedCreatePhoneButton = memo(CreatePhoneButton);
-
-const CatalogOptions = ({
-	isSortAsc,
-	filters,
-	setFilters,
-	setIsSortAsc,
-}: {
-	isSortAsc: boolean;
-	filters: Filters;
-	setFilters: (filters: Filters) => void;
-	setIsSortAsc: (isSortAsc: boolean) => void;
-}) => {
-	return (
-		<>
-			<label className="flex gap-2 items-center input input-bordered">
-				<input
-					onInput={(e) => {
-						setFilters({
-							...filters,
-							searchQuery: (e.target as HTMLInputElement).value,
-						});
-					}}
-					value={filters.searchQuery}
-					type="text"
-					className="grow"
-					placeholder="Поиск по названию"
-				/>
-				<IconSearch size="20" />
-			</label>
-			<label className="form-control">
-				<div className="label">
-					<span className="label-text">Сортировать по</span>
-				</div>
-				<select
-					className="select"
-					onChange={(e) => {
-						setIsSortAsc(e.target.value === "asc");
-					}}
-					defaultValue={isSortAsc ? "asc" : "desc"}
-				>
-					<option value="asc">По возрастанию цены</option>
-					<option value="desc">По убыванию цены</option>
-				</select>
-			</label>
-			<div className="form-control">
-				<label className="cursor-pointer label">
-					<span className="label-text">Показывать только в наличии</span>
-					<input
-						onInput={() => {
-							setFilters({
-								...filters,
-								onlyAvailable: !filters.onlyAvailable,
-							});
-						}}
-						defaultChecked={filters.onlyAvailable}
-						type="checkbox"
-						className="checkbox"
-					/>
-				</label>
-			</div>
-			<label className="form-control">
-				<div className="label">
-					<span className="label-text">Максимальная цена</span>
-				</div>
-				<input
-					className="range"
-					onInput={(e) => {
-						setFilters({
-							...filters,
-							maxPrice: Number((e.target as HTMLInputElement).value),
-						});
-					}}
-					value={filters.maxPrice}
-					min="0"
-					max="7000"
-					step="100"
-					type="range"
-				/>
-				<div className="flex justify-between">
-					<span className="label-text">0</span>
-					<span className="label-text">{filters.maxPrice}</span>
-				</div>
-			</label>
-		</>
-	);
-};
-
-const useSessionStorage = <T,>(key: string, initial: T) => {
-	const restoredValue: T =
-		JSON.parse(sessionStorage.getItem(key) ?? "null") ?? initial;
-	const [value, setValue] = useState(restoredValue);
-	return [
-		value,
-		(value: T) => {
-			sessionStorage.setItem(key, JSON.stringify(value));
-			setValue(value);
-		},
-	] as const;
-};
-
-export default function Catalog({ phones }: { phones: Phone[] }) {
-	const [page, setPage] = useSessionStorage("catalogPage", 0);
-	const [filters, setFilters] = useSessionStorage("catalogFilters", {
-		searchQuery: "",
-		maxPrice: 7000,
-		onlyAvailable: false,
-	});
-	const [isSortAsc, setIsSortAsc] = useSessionStorage("catalogSort", true);
-	const itemList = useRef<HTMLDivElement>(null);
-	const isAdmin = useSelector((state: RootState) => state.user?.isAdmin);
-
-	const filteredPhones = phones.filter(
+const filterPhones = (phones: Phone[], filters: Filters) =>
+	phones.filter(
 		(phone) =>
 			phone.priceBYN / 100 <= filters.maxPrice &&
 			(filters.onlyAvailable ? phone.available_quantity > 0 : true) &&
@@ -138,18 +21,35 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 					.includes(filters.searchQuery.toLowerCase())),
 	);
 
-	const pagesCount =
-		Math.floor(filteredPhones.length / ITEMS_PER_PAGE) +
-		Number(filteredPhones.length % ITEMS_PER_PAGE !== 0);
-	const pagesRange = [
-		page - 3,
-		page - 2,
-		page - 1,
-		page,
-		page + 1,
-		page + 2,
-		page + 3,
-	].filter((p) => p >= 0 && p < pagesCount);
+const sortPhones = (phones: Phone[], isSortAsc: boolean) =>
+	phones.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
+		return isSortAsc ? aPrice - bPrice : bPrice - aPrice;
+	});
+
+const paginatePhones = (phones: Phone[], page: number) =>
+	phones.slice(ITEMS_PER_PAGE * page, ITEMS_PER_PAGE * page + ITEMS_PER_PAGE);
+
+export default function Catalog({
+	phones,
+	user,
+}: { phones: Phone[]; user: User | null }) {
+	const [page, setPage] = useSessionStorage("catalogPage", 0);
+	const [filters, setFilters] = useSessionStorage("catalogFilters", {
+		searchQuery: "",
+		maxPrice: 7000,
+		onlyAvailable: false,
+	});
+	const [isSortAsc, setIsSortAsc] = useSessionStorage("catalogSort", true);
+
+	const showingPhones = sortPhones(filterPhones(phones, filters), isSortAsc);
+	const totalPages =
+		Math.floor(showingPhones.length / ITEMS_PER_PAGE) +
+		Number(showingPhones.length % ITEMS_PER_PAGE !== 0);
+	const paginatedPhones = paginatePhones(showingPhones, page);
+
+	const listRef = useRef<HTMLDivElement>(null);
+	const scrollTop = () =>
+		listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
 
 	return (
 		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
@@ -157,14 +57,14 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 				<input type="checkbox" />
 				<div className="text-xl font-medium collapse-title">Фильтры</div>
 				<div className="flex flex-col gap-3 collapse-content">
-					{isAdmin && <MemoizedCreatePhoneButton />}
-					<CatalogOptions
+					{user?.isAdmin === true && <CreatePhoneButton />}
+					<OptionsPanel
 						isSortAsc={isSortAsc}
 						filters={filters}
 						setFilters={(filters) => {
 							setFilters(filters);
 							setPage(0);
-							itemList.current?.scrollTo({ top: 0, behavior: "smooth" });
+							scrollTop();
 						}}
 						setIsSortAsc={setIsSortAsc}
 					/>
@@ -172,62 +72,29 @@ export default function Catalog({ phones }: { phones: Phone[] }) {
 			</div>
 			<div className="flex overflow-auto flex-col flex-1">
 				<div
-					ref={itemList}
+					ref={listRef}
 					className="flex overflow-auto flex-col flex-1 gap-1 items-center md:flex-row md:flex-wrap md:justify-center"
 				>
-					{filteredPhones.length > 0 ? (
-						filteredPhones
-							.toSorted(({ priceBYN: aPrice }, { priceBYN: bPrice }) => {
-								return isSortAsc ? aPrice - bPrice : bPrice - aPrice;
-							})
-							.slice(
-								ITEMS_PER_PAGE * page,
-								ITEMS_PER_PAGE * page + ITEMS_PER_PAGE,
-							)
-							.map((phone) => <PhoneCard key={phone.id} phone={phone} />)
+					{paginatedPhones.length > 0 ? (
+						paginatedPhones.map((phone) => (
+							<PhoneCard key={phone.id} phone={phone} user={user} />
+						))
 					) : (
-						<span className="text-2xl font-bold text-neutral-500">
-							Товары не найдены
-						</span>
+						<div className="flex justify-center items-center w-full h-full">
+							<span className="text-2xl font-bold text-neutral-500">
+								Товары не найдены
+							</span>
+						</div>
 					)}
 				</div>
-
-				<div className="flex justify-center pt-3 w-full">
-					<div className="join">
-						<button
-							disabled={page === 0}
-							onClick={() => {
-								setPage(0);
-								itemList.current?.scrollTo(0, 0);
-							}}
-							className="join-item btn"
-						>
-							«
-						</button>
-						{pagesRange.map((p) => (
-							<button
-								className={`join-item btn ${p === page ? "btn-primary" : ""}`}
-								key={p}
-								onClick={() => {
-									setPage(p);
-									itemList.current?.scrollTo(0, 0);
-								}}
-							>
-								{p + 1}
-							</button>
-						))}
-						<button
-							disabled={page === pagesCount - 1}
-							onClick={() => {
-								setPage(pagesCount - 1);
-								itemList.current?.scrollTo(0, 0);
-							}}
-							className="join-item btn"
-						>
-							»
-						</button>
-					</div>
-				</div>
+				<PagesBar
+					page={page}
+					totalPages={totalPages}
+					setPage={(page) => {
+						setPage(page);
+						scrollTop();
+					}}
+				/>
 			</div>
 		</div>
 	);
