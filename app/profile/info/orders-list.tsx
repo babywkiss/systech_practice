@@ -1,6 +1,7 @@
 import { extractUser } from "@/app/api/auth";
 import prisma from "@/prisma/client";
 import { Order, Phone } from "@prisma/client";
+import { IconCheck, IconClock } from "@tabler/icons-react";
 
 export default async function OrdersList() {
 	const user = await extractUser();
@@ -26,6 +27,10 @@ export default async function OrdersList() {
 									<span className="text-neutral-400">
 										от {o.created.toISOString().split("T")[0]}
 									</span>
+									<div className="gap-2 badge">
+										<span>Статус</span>
+										{o.completed ? <IconCheck /> : <IconClock />}
+									</div>
 								</span>
 							</div>
 						))}
