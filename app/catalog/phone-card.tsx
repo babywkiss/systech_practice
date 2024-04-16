@@ -31,7 +31,7 @@ export default function PhoneCard({
 					alt="phone-image"
 					width={500}
 					height={500}
-					className="object-cover w-72 rounded-lg transition-all cursor-pointer hover:shadow-xl aspect-square"
+					className="object-cover w-48 rounded-lg transition-all cursor-pointer md:w-72 hover:shadow-xl aspect-square"
 					src={phone.imageLink}
 				/>
 			</Link>

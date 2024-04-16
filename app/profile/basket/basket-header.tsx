@@ -10,7 +10,7 @@ export default function BasketHeader() {
 	const totalPrice = calcBasketTotalPrice(basket);
 
 	return (
-		<div className="flex justify-between items-center w-full">
+		<div className="flex flex-col gap-3 justify-between w-full md:flex-row md:items-center">
 			<span className="flex gap-3 items-center text-xl font-bold">
 				<IconBasket />
 				Ваша корзина

@@ -5,7 +5,7 @@ export default function BasketPage() {
 	return (
 		<div className="flex flex-col gap-5 w-full h-full">
 			<BasketHeader />
-			<div className="overflow-auto">
+			<div className="overflow-auto h-full">
 				<BasketList />
 			</div>
 		</div>

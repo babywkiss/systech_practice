@@ -8,6 +8,7 @@ export default async function ProfileInfoPage() {
 	return (
 		<div className="flex flex-col gap-5 w-full h-full">
 			<ProfileInfo user={user} />
+			<span className="text-lg font-bold text-neutral-500">Список заказов</span>
 			<OrdersList />
 		</div>
 	);

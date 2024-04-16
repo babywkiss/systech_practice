@@ -11,11 +11,14 @@ export default function BasketList() {
 	const basket = useAppSelector((state) => state.basket.data);
 
 	return (
-		<div>
+		<>
 			{basket.length > 0 ? (
-				<div className="flex overflow-auto flex-wrap gap-3 justify-center items-center">
+				<div className="flex overflow-auto gap-3 items-center p-2 h-full rounded-lg md:flex-wrap md:justify-center bg-base-100">
 					{basket.map(({ phone, count }) => (
-						<div key={phone.id} className="flex flex-col gap-2 shrink-0">
+						<div
+							key={phone.id}
+							className="flex flex-col gap-2 p-1 rounded-lg shrink-0 bg-base-200"
+						>
 							<div className="relative h-48 aspect-square">
 								<Image
 									width={300}
@@ -53,6 +56,6 @@ export default function BasketList() {
 					В корзине ничего нет
 				</span>
 			)}
-		</div>
+		</>
 	);
 }

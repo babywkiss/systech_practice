@@ -10,30 +10,31 @@ export default async function Header() {
 
 	return (
 		<div className="gap-1 navbar bg-base-100">
-			<div className="flex-1">
+			<div className="flex-1 md:flex-none">
 				<Logo />
+			</div>
+			<div className="hidden flex-1 gap-5 justify-center items-center md:flex">
+				<Link className="btn btn-ghost btn-sm" href="/catalog">
+					Каталог
+				</Link>
 			</div>
 			{user?.isSuperAdmin && (
 				<div className="flex-none">
 					<Link className="btn btn-warning" href="/admin">
 						<IconUser />
-						Пользователи
+						<span className="hidden md:block">Пользователи</span>
 					</Link>
 				</div>
 			)}
 			<div className="flex-none">
 				<Link
-					className="invisible md:visible btn btn-primary"
+					className="btn btn-ghost"
 					href={user ? "/profile/info" : "/login"}
 				>
-					{user ? (
-						<>
-							<IconUser />
-							{user.email}
-						</>
-					) : (
-						"Войти в аккаунт"
-					)}
+					<IconUser />
+					<span className="hidden md:block">
+						{user?.email ?? "Войти в аккаунт"}
+					</span>
 				</Link>
 			</div>
 			<div className="flex-none">

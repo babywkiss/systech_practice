@@ -4,8 +4,8 @@ export default function ProfileLayout({
 	children,
 }: { children: React.ReactNode }) {
 	return (
-		<div className="flex gap-5 w-full h-full">
-			<ul className="w-56 menu bg-base-200 rounded-box">
+		<div className="flex flex-col gap-5 w-full h-full md:flex-row">
+			<ul className="md:w-56 menu menu-horizontal bg-base-200 rounded-box md:menu-vertical">
 				<li>
 					<Link href={"/profile/info"}>Аккаунт</Link>
 				</li>

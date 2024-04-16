@@ -14,7 +14,7 @@ export default async function PhonePage({
 	if (!phone) return <span>Товар не найден</span>;
 	const isAdmin = (await extractUser())?.isAdmin === true;
 	return (
-		<div className="flex flex-col p-3 w-full h-full">
+		<div className="flex flex-col gap-3 p-3 w-full h-full">
 			<div className="flex flex-col gap-1">
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
@@ -30,8 +30,8 @@ export default async function PhonePage({
 						: "Нет в наличии"}
 				</span>
 			</div>
-			<div className="flex flex-col gap-5 w-full h-full md:flex-row">
-				<div className="relative h-96 aspect-square">
+			<div className="flex flex-col gap-5 w-full md:flex-row">
+				<div className="relative h-80 md:h-96 md:aspect-square">
 					<Image
 						alt="Phone Photo"
 						fill
@@ -41,6 +41,7 @@ export default async function PhonePage({
 					/>
 				</div>
 				<ul className="flex flex-col gap-3 w-full">
+					<span className="font-bold">Описание</span>
 					<li className="flex p-3 w-full rounded-lg bg-base-100">
 						<span className="break-all">{phone.description}</span>
 					</li>

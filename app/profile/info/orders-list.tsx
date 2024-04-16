@@ -12,7 +12,7 @@ export default async function OrdersList() {
 		});
 
 	return (
-		<div className="flex overflow-auto flex-col gap-3 w-full h-full">
+		<div className="flex overflow-auto flex-col gap-3 w-full h-full rounded-lg">
 			{orders.length > 0 && user && (
 				<div className="flex overflow-auto flex-col gap-3 p-3 w-full h-full bg-base-100">
 					<div className="flex overflow-auto flex-col gap-2 w-full h-full">

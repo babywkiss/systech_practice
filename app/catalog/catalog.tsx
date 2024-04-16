@@ -53,27 +53,29 @@ export default function Catalog({
 
 	return (
 		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
-			<div className="md:w-1/4 collapse bg-base-200 max-md:collapse-arrow md:collapse-open">
-				<input type="checkbox" />
-				<div className="text-xl font-medium collapse-title">Фильтры</div>
-				<div className="flex flex-col gap-3 collapse-content">
-					{user?.isAdmin === true && <CreatePhoneButton />}
-					<OptionsPanel
-						isSortAsc={isSortAsc}
-						filters={filters}
-						setFilters={(filters) => {
-							setFilters(filters);
-							setPage(0);
-							scrollTop();
-						}}
-						setIsSortAsc={setIsSortAsc}
-					/>
+			<div className="flex flex-col gap-3 md:w-1/4 md:h-full">
+				{user?.isAdmin === true && <CreatePhoneButton />}
+				<div className="w-full h-full collapse bg-base-200 max-md:collapse-arrow md:collapse-open">
+					<input type="checkbox" />
+					<div className="text-xl font-medium collapse-title">Фильтры</div>
+					<div className="flex flex-col gap-3 collapse-content">
+						<OptionsPanel
+							isSortAsc={isSortAsc}
+							filters={filters}
+							setFilters={(filters) => {
+								setFilters(filters);
+								setPage(0);
+								scrollTop();
+							}}
+							setIsSortAsc={setIsSortAsc}
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="flex overflow-auto flex-col flex-1">
 				<div
 					ref={listRef}
-					className="flex overflow-auto flex-col flex-1 gap-1 items-center md:flex-row md:flex-wrap md:justify-center"
+					className="flex overflow-auto flex-col flex-1 gap-1 items-center rounded-lg md:flex-row md:flex-wrap md:justify-center"
 				>
 					{paginatedPhones.length > 0 ? (
 						paginatedPhones.map((phone) => (

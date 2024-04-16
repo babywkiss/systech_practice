@@ -27,7 +27,7 @@ export default function ProfileInfo({ user }: { user: User | null }) {
 					</button>
 				</div>
 			) : (
-				<Link href="/auth/login" className="btn btn-primary md:w-fit">
+				<Link href="/login" className="btn btn-primary md:w-fit">
 					Войти в аккаунт
 				</Link>
 			)}
