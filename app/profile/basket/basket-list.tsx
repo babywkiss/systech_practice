@@ -18,7 +18,7 @@ export default function BasketList() {
 					{basket.map(({ phone, count }) => (
 						<div
 							key={phone.id}
-							className="flex flex-col gap-2 p-1 rounded-lg shrink-0 bg-base-200"
+							className="flex flex-col gap-2 p-3 rounded-lg shrink-0 bg-base-200"
 						>
 							{phone.imageLink ? (
 								<Image
@@ -37,7 +37,7 @@ export default function BasketList() {
 							<span className="font-bold">
 								{phone.manufacturer} - {phone.model}
 							</span>
-							<Link href={`/items/${phone.id}`} className="btn btn-sm">
+							<Link href={`/catalog/${phone.id}`} className="btn btn-sm">
 								Подробнее
 							</Link>
 							<button

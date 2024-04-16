@@ -23,7 +23,7 @@ export default function EditPhoneButton({
 			method: "PATCH",
 			body: JSON.stringify({ ...newPhone, priceBYN: newPhone.priceBYN * 100 }),
 		}).then(() => {
-			router.push(`/items/${phone.id}`);
+			router.push(`/catalog/${phone.id}`);
 			router.refresh();
 		});
 	};
