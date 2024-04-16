@@ -10,15 +10,17 @@ import PhoneCard from "./phone-card";
 
 const ITEMS_PER_PAGE = 10;
 
+const searchQueryFilter = (phone: Phone, query: string) =>
+	`${phone.manufacturer}${phone.model}`
+		.toLowerCase()
+		.includes(query.toLowerCase().replaceAll(" ", ""));
+
 const filterPhones = (phones: Phone[], filters: Filters) =>
 	phones.filter(
 		(phone) =>
 			phone.priceBYN / 100 <= filters.maxPrice &&
 			(filters.onlyAvailable ? phone.available_quantity > 0 : true) &&
-			(phone.model.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-				phone.manufacturer
-					.toLowerCase()
-					.includes(filters.searchQuery.toLowerCase())),
+			searchQueryFilter(phone, filters.searchQuery),
 	);
 
 const sortPhones = (phones: Phone[], isSortAsc: boolean) =>
@@ -53,7 +55,7 @@ export default function Catalog({
 
 	return (
 		<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
-			<div className="flex flex-col gap-3 md:w-1/4 md:h-full">
+			<div className="flex flex-col gap-3 md:w-2/5 md:h-full lg:w-1/4">
 				{user?.isAdmin === true && <CreatePhoneButton />}
 				<div className="w-full h-full collapse bg-base-200 max-md:collapse-arrow md:collapse-open">
 					<input type="checkbox" />
