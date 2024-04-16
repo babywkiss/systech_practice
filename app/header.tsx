@@ -14,9 +14,11 @@ export default async function Header() {
 				<Logo />
 			</div>
 			<div className="hidden flex-1 gap-5 justify-center items-center md:flex">
-				<Link className="btn btn-ghost btn-sm" href="/catalog">
-					Каталог
-				</Link>
+				{
+					// 	<Link className="btn btn-ghost btn-sm" href="/catalog">
+					// 		Каталог
+					// 	</Link>
+				}
 			</div>
 			{user?.isSuperAdmin && (
 				<div className="flex-none">

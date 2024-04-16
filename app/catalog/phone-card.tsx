@@ -4,6 +4,7 @@ import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import { formatPrice } from "../utils";
 import Image from "next/image";
+import { IconBan } from "@tabler/icons-react";
 
 export default function PhoneCard({
 	phone,
@@ -13,7 +14,7 @@ export default function PhoneCard({
 		<div className="flex flex-col gap-3 p-3 w-full rounded-lg md:w-80 bg-base-200 hover:bg-base-100">
 			<div className="flex justify-between items-center group">
 				<Link
-					href={`/items/${phone.id}`}
+					href={`/catalog/${phone.id}`}
 					className="flex gap-3 items-center text-xl"
 				>
 					<span className="font-bold">{phone.manufacturer}</span>
@@ -26,14 +27,24 @@ export default function PhoneCard({
 					{user?.isAdmin === true && <PhoneControl phone={phone} />}
 				</div>
 			</div>
-			<Link className="flex justify-center w-full" href={`/items/${phone.id}`}>
-				<Image
-					alt="phone-image"
-					width={500}
-					height={500}
-					className="object-cover w-48 rounded-lg transition-all cursor-pointer md:w-72 hover:shadow-xl aspect-square"
-					src={phone.imageLink}
-				/>
+			<Link
+				className="flex justify-center w-full"
+				href={`/catalog/${phone.id}`}
+			>
+				{phone.imageLink ? (
+					<Image
+						alt="phone-image"
+						width={500}
+						height={500}
+						className="object-cover w-48 rounded-lg transition-all cursor-pointer md:w-72 hover:shadow-xl aspect-square"
+						src={phone.imageLink}
+					/>
+				) : (
+					<div className="flex flex-col gap-3 justify-center items-center w-48 md:w-72 aspect-square text-neutral-500">
+						<IconBan size={100} />
+						<span>Нет изображения</span>
+					</div>
+				)}
 			</Link>
 			<span className="flex gap-2">
 				Стоимость
