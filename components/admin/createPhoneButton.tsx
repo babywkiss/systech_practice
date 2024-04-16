@@ -15,7 +15,7 @@ export default function CreatePhoneButton() {
 		})
 			.then((data) => data.text())
 			.then((id) => {
-				router.push(`/items/${id}`);
+				router.push(`/catalog/${id}`);
 			});
 	};
 
