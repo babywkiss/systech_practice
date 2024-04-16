@@ -4,17 +4,7 @@ import { createToken, decodeToken, isEmail, isPassword } from "../../auth";
 import { errorResponse, tryOrNull } from "../../utils";
 import resend from "./resend";
 import { cookies } from "next/headers";
-
-const generateMailBody = (token: string, baseUrl = "localhost:3000") => {
-	const url = new URL(`${baseUrl}/resetPassword/confirm`);
-	url.searchParams.append("token", token);
-	return `
-<h1>Перейдите по ссылке чтобы указать новый пароль</h1>
-<h3>Phone-Shop</h3>
-Данная ссылка действительная в течении 10 минут
-<a href="http://${url.toString()}">Восстановить пароль</a>
-`;
-};
+import Mail from "./mail";
 
 export async function POST(req: Request) {
 	const data = await tryOrNull(req.formData());
@@ -28,10 +18,13 @@ export async function POST(req: Request) {
 
 	const token = await createToken(user, "10m", { passwordReset: true });
 	const result = await resend.emails.send({
-		from: "phoneShop@resend.dev",
+		from: process.env.MAIL_DOMAIN ?? "phoneshop@nicejji.studio",
 		to: user.email,
 		subject: "Восстановление пароля на Phone-Shop",
-		html: generateMailBody(token),
+		react: Mail({
+			token,
+			baseUrl: process.env.DOMAIN ?? "https://localhost:3000",
+		}),
 	});
 
 	if (result.error) {
