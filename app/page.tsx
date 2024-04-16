@@ -59,7 +59,7 @@ export default async function MainPage() {
 										</h2>
 										<div className="justify-end card-actions">
 											<Link
-												href={`/items/${phone.id}`}
+												href={`/catalog/${phone.id}`}
 												className="btn btn-primary"
 											>
 												Подробнее

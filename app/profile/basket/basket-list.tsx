@@ -2,6 +2,7 @@
 
 import { removeItemFromBasket } from "@/app/store/basketSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
+import { IconBan } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,13 +21,20 @@ export default function BasketList() {
 							className="flex flex-col gap-2 p-1 rounded-lg shrink-0 bg-base-200"
 						>
 							<div className="relative h-48 aspect-square">
-								<Image
-									width={300}
-									height={300}
-									alt="Phone Image"
-									className="object-cover rounded-lg"
-									src={phone.imageLink}
-								/>
+								{phone.imageLink ? (
+									<Image
+										width={300}
+										height={300}
+										alt="Phone Image"
+										className="object-cover rounded-lg"
+										src={phone.imageLink}
+									/>
+								) : (
+									<div className="flex flex-col gap-3 justify-center items-center w-48 aspect-square text-neutral-500">
+										<IconBan size={100} />
+										<span>Нет изображения</span>
+									</div>
+								)}
 							</div>
 							<span className="font-bold">
 								{phone.manufacturer} - {phone.model}

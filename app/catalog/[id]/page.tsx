@@ -2,7 +2,7 @@ import { extractUser } from "@/app/api/auth";
 import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
-import { IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
+import { IconBan, IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
 import Image from "next/image";
 
 export default async function PhonePage({
@@ -32,18 +32,27 @@ export default async function PhonePage({
 			</div>
 			<div className="flex flex-col gap-5 w-full md:flex-row">
 				<div className="relative h-80 md:h-96 md:aspect-square">
-					<Image
-						alt="Phone Photo"
-						fill
-						sizes="100vw"
-						className="object-cover rounded-lg"
-						src={phone.imageLink}
-					/>
+					{phone.imageLink ? (
+						<Image
+							alt="Phone Photo"
+							fill
+							sizes="100vw"
+							className="object-cover rounded-lg"
+							src={phone.imageLink}
+						/>
+					) : (
+						<div className="flex flex-col gap-3 justify-center items-center w-48 md:w-72 aspect-square text-neutral-500">
+							<IconBan size={100} />
+							<span>Нет изображения</span>
+						</div>
+					)}
 				</div>
 				<ul className="flex flex-col gap-3 w-full">
 					<span className="font-bold">Описание</span>
 					<li className="flex p-3 w-full rounded-lg bg-base-100">
-						<span className="break-all">{phone.description}</span>
+						<span className="break-all">
+							{phone.description || "Описание отсутсвует"}
+						</span>
 					</li>
 					<li className="flex gap-1 items-center">
 						<IconCalendar size={"30"} />
@@ -56,7 +65,7 @@ export default async function PhonePage({
 						<IconCpu size={"30"} />
 						<span>
 							Процессор:
-							<span className="font-bold">{phone.cpu}</span>
+							<span className="font-bold">{phone.cpu || "Неизвестен"}</span>
 						</span>
 					</li>
 					<li className="flex gap-1 items-center">
