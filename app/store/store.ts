@@ -2,8 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
-import userReducer from "./userSlice";
 import basketReducer from "./basketSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const createNoopStorage = () => {
 	return {
@@ -31,7 +31,6 @@ const basketPersistReducer = persistReducer(
 
 export const store = configureStore({
 	reducer: {
-		user: userReducer,
 		basket: basketPersistReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
@@ -40,3 +39,6 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();

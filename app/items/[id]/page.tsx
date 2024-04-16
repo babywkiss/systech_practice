@@ -1,8 +1,9 @@
-import getUser from "@/app/api/getUser";
+import { extractUser } from "@/app/api/auth";
 import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
 import { IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
+import Image from "next/image";
 
 export default async function PhonePage({
 	params,
@@ -11,9 +12,9 @@ export default async function PhonePage({
 		where: { id: Number(params.id) },
 	});
 	if (!phone) return <span>Товар не найден</span>;
-	const isAdmin = (await getUser())?.isAdmin === true;
+	const isAdmin = (await extractUser())?.isAdmin === true;
 	return (
-		<div className="flex flex-col p-3 w-full h-full">
+		<div className="flex flex-col gap-3 p-3 w-full h-full">
 			<div className="flex flex-col gap-1">
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
@@ -29,12 +30,18 @@ export default async function PhonePage({
 						: "Нет в наличии"}
 				</span>
 			</div>
-			<div className="flex flex-col gap-5 w-full h-full md:flex-row">
-				<img
-					className="object-cover h-96 rounded-lg aspect-square"
-					src={phone.imageLink}
-				/>
+			<div className="flex flex-col gap-5 w-full md:flex-row">
+				<div className="relative h-80 md:h-96 md:aspect-square">
+					<Image
+						alt="Phone Photo"
+						fill
+						sizes="100vw"
+						className="object-cover rounded-lg"
+						src={phone.imageLink}
+					/>
+				</div>
 				<ul className="flex flex-col gap-3 w-full">
+					<span className="font-bold">Описание</span>
 					<li className="flex p-3 w-full rounded-lg bg-base-100">
 						<span className="break-all">{phone.description}</span>
 					</li>

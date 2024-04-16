@@ -5,7 +5,6 @@ import { CreatePaymentMethodFromElement } from "@stripe/stripe-js";
 import { FormEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { getCountedBasket } from "../profile/profile";
 import { useRouter } from "next/navigation";
 import { resetBasket } from "../store/basketSlice";
 
@@ -16,7 +15,6 @@ export default function PayWidget() {
 
 	const dispatch = useDispatch();
 	const basket = useSelector((state: RootState) => state.basket.data);
-	const countedBasket = getCountedBasket(basket);
 
 	const modal = useRef<HTMLDialogElement>(null);
 
@@ -38,11 +36,11 @@ export default function PayWidget() {
 				modal.current?.showModal();
 				return;
 			}
-			const serverResponse = await fetch("/api/pay", {
+			const serverResponse = await fetch("/api/orders", {
 				method: "POST",
 				body: JSON.stringify({
 					payment_intent_id: paymentIntent.id,
-					basket: countedBasket,
+					basket,
 				}),
 			});
 			await handleServerResponse(await serverResponse.json());
@@ -66,11 +64,11 @@ export default function PayWidget() {
 		if (result.error) {
 			setHint(result.error?.message ?? "");
 		} else {
-			const response = await fetch("/api/pay", {
+			const response = await fetch("/api/orders", {
 				method: "POST",
 				body: JSON.stringify({
 					payment_method_id: result.paymentMethod.id,
-					basket: countedBasket,
+					basket,
 				}),
 			});
 			const paymentResponse = await response.json();
@@ -109,7 +107,7 @@ export default function PayWidget() {
 						<form method="dialog">
 							<button
 								onClick={() => {
-									router.replace("/profile");
+									router.replace("/profile/info");
 									router.refresh();
 								}}
 								className="btn"

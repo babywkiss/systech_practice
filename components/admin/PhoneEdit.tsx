@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import Image from "next/image";
 
 export const DEFAULT_PHONE: Prisma.PhoneCreateInput = {
 	manufacturer: "",
@@ -78,10 +79,14 @@ export default function PhoneEdit({
 					placeholder="Ссылка на изображение"
 					value={phone.imageLink}
 				/>
-				<img
-					className="object-cover h-32 aspect-square"
-					src={phone.imageLink}
-				/>
+				<div className="relative h-32 aspect-square">
+					<Image
+						fill
+						alt="Image Preview"
+						className="object-cover"
+						src={phone.imageLink}
+					/>
+				</div>
 			</div>
 			<div className="flex justify-between items-center">
 				<div className="flex flex-col gap-2">

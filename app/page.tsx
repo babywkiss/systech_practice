@@ -1,6 +1,7 @@
 import AutoSlider from "@/components/autoSlider";
 import prisma from "@/prisma/client";
 import { IconShoppingBag } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function MainPage() {
@@ -20,12 +21,18 @@ export default async function MainPage() {
 	const promos = await prisma.promo.findMany();
 	return (
 		<main className="flex flex-col gap-5 w-full h-full md:flex-row">
-			<div className="flex flex-col gap-5 p-3 md:w-1/3 md:h-full">
+			<div className="flex flex-col gap-5 p-3 w-full h-96 md:w-1/3 md:h-full">
 				<h3 className="text-3xl font-bold">Новости и акции</h3>
 				<AutoSlider className="w-full h-full carousel rounded-box">
 					{promos.map(({ imageLink, id }) => (
-						<div key={id} className="w-full carousel-item">
-							<img className="object-cover" src={imageLink} />
+						<div key={id} className="relative w-full h-full carousel-item">
+							<Image
+								sizes="100vw"
+								fill
+								alt="promo-image"
+								className="object-cover"
+								src={imageLink}
+							/>
 						</div>
 					))}
 				</AutoSlider>
@@ -37,9 +44,12 @@ export default async function MainPage() {
 						return (
 							<div key={phone.id} className="w-full carousel-item">
 								<div className="w-full rounded-none card bg-base-100">
-									<figure>
-										<img
-											className="object-cover w-full aspect-square"
+									<figure className="relative w-full h-96 md:h-full">
+										<Image
+											sizes="100vw"
+											fill
+											alt="Phone Image"
+											className="object-cover"
 											src={phone.imageLink}
 										/>
 									</figure>
