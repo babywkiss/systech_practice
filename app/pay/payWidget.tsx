@@ -55,11 +55,13 @@ export default function PayWidget() {
 		setLoading(true);
 		e.preventDefault();
 		if (!stripe || !elements) return;
+		const card = elements.getElement(CardElement);
+		if (!card) return;
 
 		const result = await stripe.createPaymentMethod({
 			type: "card",
-			card: elements.getElement(CardElement),
-		} as unknown as CreatePaymentMethodFromElement);
+			card,
+		});
 
 		if (result.error) {
 			setHint(result.error?.message ?? "");
