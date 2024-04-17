@@ -90,7 +90,9 @@ export default function PayWidget() {
 				<span className="text-sm text-error">{hint}</span>
 			</label>
 			{loading ? (
-				<span className="loading loading-spinner loading-md"></span>
+				<div className="flex justify-center items-center w-full">
+					<span className="loading loading-spinner loading-md"></span>
+				</div>
 			) : (
 				<button className="btn btn-success">Оплатить</button>
 			)}
