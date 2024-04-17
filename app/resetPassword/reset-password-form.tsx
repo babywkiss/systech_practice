@@ -4,6 +4,9 @@ import { IconMail } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+const isPassword = (str: string) => PASSWORD_REGEX.test(str) && str.length < 50;
+
 export default function ResetPasswordForm() {
 	const router = useRouter();
 	const [error, setError] = useState("");
@@ -12,11 +15,22 @@ export default function ResetPasswordForm() {
 	const modal = useRef<HTMLDialogElement>(null);
 
 	const handleSubmit = async (e: FormEvent) => {
-		setLoading(true);
 		e.preventDefault();
+		const formData = new FormData(e.target as HTMLFormElement);
+
+		const isPasswordValid = isPassword(
+			formData.get("password")?.toString() ?? "",
+		);
+		if (!isPasswordValid) {
+			setError(
+				"Пароль должен содержать минимум 1 цифру, 1 символ (нижний и верхний регистр), минимум 8 латинских символов.",
+			);
+			return;
+		}
+		setLoading(true);
 		const res = await fetch("/api/users/resetPassword", {
 			method: "POST",
-			body: new FormData(e.target as HTMLFormElement),
+			body: formData,
 		});
 		if (res.ok) {
 			modal?.current?.showModal();
