@@ -8,17 +8,21 @@ export default function ProfileLayoutMenu() {
 
 	return (
 		<ul className="gap-2 justify-center md:justify-start md:w-56 menu menu-horizontal bg-base-200 rounded-box md:menu-vertical">
-			<li>
+			<li className="flex-1 md:flex-none">
 				<Link
-					className={path === "/profile/info" ? "active" : ""}
+					className={`justify-center md:justify-start ${
+						path === "/profile/info" ? "active" : ""
+					}`}
 					href={"/profile/info"}
 				>
 					Аккаунт
 				</Link>
 			</li>
-			<li>
+			<li className="flex-1 md:flex-none">
 				<Link
-					className={path === "/profile/basket" ? "active" : ""}
+					className={`justify-center md:justify-start ${
+						path === "/profile/basket" ? "active" : ""
+					}`}
 					href={"/profile/basket"}
 				>
 					Корзина

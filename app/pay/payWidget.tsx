@@ -1,7 +1,6 @@
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { CreatePaymentMethodFromElement } from "@stripe/stripe-js";
 import { FormEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";

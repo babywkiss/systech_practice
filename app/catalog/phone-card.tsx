@@ -48,7 +48,7 @@ export default function PhoneCard({
 			</Link>
 			<span className="flex gap-2">
 				Стоимость
-				<span className="font-bold text-green-700">
+				<span className="font-bold text-success">
 					{formatPrice(phone.priceBYN)} BYN
 				</span>
 			</span>
