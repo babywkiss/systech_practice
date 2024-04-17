@@ -11,7 +11,7 @@ export default function CredentialsForm({
 	onSubmit: (
 		credentials: { email: string; password: string },
 		setError: (err: string) => void,
-	) => void;
+	) => void | Promise<void>;
 }) {
 	const [error, setError] = useState("");
 
@@ -19,7 +19,7 @@ export default function CredentialsForm({
 		e.preventDefault();
 		const data = new FormData(e.target as HTMLFormElement);
 
-		onSubmit(
+		await onSubmit(
 			Object.fromEntries(data) as { email: string; password: string },
 			setError,
 		);

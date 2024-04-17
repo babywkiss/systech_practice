@@ -16,19 +16,25 @@ export async function POST(req: Request) {
 
 	if (!user) return errorResponse("Такого пользователя не существует", 400);
 
-	const token = await createToken(user, "10m", { passwordReset: true });
-	const result = await resend.emails.send({
-		from: process.env.MAIL_DOMAIN ?? "phoneshop@nicejji.studio",
-		to: user.email,
-		subject: "Восстановление пароля на Phone-Shop",
-		react: Mail({
-			token,
-			baseUrl: process.env.DOMAIN ?? "https://localhost:3000",
-		}),
+	const token = await createToken(user, "10m", {
+		passwordReset: true,
+		resetCount: user.passwordResets,
 	});
 
-	if (result.error) {
-		console.log(result.error);
+	const result = await tryOrNull(
+		resend.emails.send({
+			from: process.env.MAIL_DOMAIN ?? "phoneshop@nicejji.studio",
+			to: user.email,
+			subject: "Восстановление пароля на Phone-Shop",
+			react: Mail({
+				token,
+				baseUrl: process.env.DOMAIN ?? "https://localhost:3000",
+			}),
+		}),
+	);
+
+	if (result?.error || result === null) {
+		console.log(result?.error);
 		return errorResponse(
 			"Не удалось отправить сообщение на указанный адрес.",
 			500,
@@ -45,11 +51,17 @@ export async function PATCH(req: Request) {
 	const data = await decodeToken(token ?? "");
 	const id = data?.payload?.id;
 	const passwordReset = data?.payload?.passwordReset === true;
+	const resetCount = data?.payload?.resetCount;
 
-	if (typeof id !== "number" || !passwordReset)
+	if (
+		typeof id !== "number" ||
+		!passwordReset ||
+		typeof resetCount !== "number"
+	)
 		return errorResponse("Cсылка не действительна", 400);
 	const user = await prisma.user.findUnique({ where: { id } });
-	if (!user) return errorResponse("Cсылка не действительна", 400);
+	if (!user || user.passwordResets !== resetCount)
+		return errorResponse("Cсылка не действительна", 400);
 	if (!isPassword(newPassword ?? ""))
 		return errorResponse("Слишком короткий пароль.", 400);
 
@@ -58,6 +70,7 @@ export async function PATCH(req: Request) {
 			where: { id: user.id },
 			data: {
 				passwordHash: await bcrypt.hash(newPassword, 10),
+				passwordResets: user.passwordResets + 1,
 			},
 		}),
 	);
