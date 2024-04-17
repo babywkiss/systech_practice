@@ -8,6 +8,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			fontFamily: {
+				sans: ["var(--font-rubik)"],
+			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
 				"gradient-conic":
