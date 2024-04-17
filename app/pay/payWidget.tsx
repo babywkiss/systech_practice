@@ -1,7 +1,6 @@
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { CreatePaymentMethodFromElement } from "@stripe/stripe-js";
 import { FormEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -55,11 +54,13 @@ export default function PayWidget() {
 		setLoading(true);
 		e.preventDefault();
 		if (!stripe || !elements) return;
+		const card = elements.getElement(CardElement);
+		if (!card) return;
 
 		const result = await stripe.createPaymentMethod({
 			type: "card",
-			card: elements.getElement(CardElement),
-		} as unknown as CreatePaymentMethodFromElement);
+			card,
+		});
 
 		if (result.error) {
 			setHint(result.error?.message ?? "");

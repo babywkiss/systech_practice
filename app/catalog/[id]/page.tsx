@@ -24,7 +24,7 @@ export default async function PhonePage({
 				{isAdmin && <PhoneControl verbose={true} phone={phone} />}
 				<span
 					className={`${
-						phone.available_quantity > 0 ? "text-green-600" : "text-red-500"
+						phone.available_quantity > 0 ? "text-success" : "text-error"
 					}`}
 				>
 					{phone.available_quantity > 0
@@ -79,7 +79,7 @@ export default async function PhonePage({
 					</li>
 					<li className="flex gap-3 items-center pb-3">
 						<AddToBasketButton phone={phone} />
-						<span className="font-bold text-green-600">
+						<span className="font-bold text-success">
 							{phone.priceBYN / 100} BYN
 						</span>
 					</li>

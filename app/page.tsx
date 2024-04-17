@@ -72,13 +72,13 @@ export default async function MainPage() {
 					})}
 				</AutoSlider>
 			</div>
-			<Link
-				className="flex-col gap-3 items-center h-1/2 md:w-1/3 md:h-full btn"
-				href="/catalog"
-			>
-				<span className="text-5xl font-bold">Каталог</span>
-				<IconShoppingBag size="100" />
-			</Link>
+			<div className="flex flex-col gap-5 p-3 w-full h-96 md:w-1/3 md:h-full">
+				<h3 className="hidden text-3xl font-bold md:block md:invisible">.</h3>
+				<Link className="flex-1 w-full rounded-xl btn" href="/catalog">
+					<span className="text-5xl font-bold">Каталог</span>
+					<IconShoppingBag size="100" />
+				</Link>
+			</div>
 		</main>
 	);
 }
