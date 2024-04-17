@@ -11,11 +11,11 @@ export default function PhoneCard({
 	user,
 }: { phone: Phone; user: User | null }) {
 	return (
-		<div className="flex flex-col gap-3 p-3 w-full rounded-lg md:w-80 bg-base-200 hover:bg-base-100">
+		<div className="flex flex-col gap-3 p-3 w-full rounded-lg transition-all md:w-80 hover:shadow-xl bg-base-200 hover:bg-base-100">
 			<div className="flex justify-between items-center group">
 				<Link
 					href={`/catalog/${phone.id}`}
-					className="flex gap-3 items-center text-xl"
+					className="flex gap-3 items-center w-full text-xl"
 				>
 					<span className="font-bold">{phone.manufacturer}</span>
 					<span>{phone.model}</span>
@@ -36,7 +36,7 @@ export default function PhoneCard({
 						alt="phone-image"
 						width={500}
 						height={500}
-						className="object-cover w-48 rounded-lg transition-all cursor-pointer md:w-72 hover:shadow-xl aspect-square"
+						className="object-cover w-48 rounded-lg cursor-pointer md:w-72 aspect-square"
 						src={phone.imageLink}
 					/>
 				) : (

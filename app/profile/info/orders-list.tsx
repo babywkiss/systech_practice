@@ -27,8 +27,12 @@ export default async function OrdersList() {
 									<span className="text-neutral-400">
 										от {o.created.toISOString().split("T")[0]}
 									</span>
-									<div className="gap-2 badge">
-										<span>Статус</span>
+									<div
+										className={`gap-2 badge ${
+											o.completed ? "text-success" : ""
+										}`}
+									>
+										<span>{o.completed ? "Выполнен" : "В процессе"}</span>
 										{o.completed ? <IconCheck /> : <IconClock />}
 									</div>
 								</span>

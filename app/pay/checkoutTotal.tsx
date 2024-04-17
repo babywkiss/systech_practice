@@ -12,7 +12,7 @@ export default function CheckoutTotal() {
 			0,
 		) / 100;
 	return (
-		<div className="flex flex-col gap-3 items-center p-3 rounded-lg bg-base-100">
+		<div className="flex overflow-auto flex-col gap-3 items-center p-3 w-full h-full rounded-lg bg-base-100 md:h-fit md:w-fit">
 			<table className="table">
 				<thead>
 					<tr>

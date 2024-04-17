@@ -2,15 +2,9 @@ import { extractUser } from "@/app/api/auth";
 import AddToBasketButton from "@/components/addToBasketButton";
 import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
-import {
-	IconArrowLeft,
-	IconBan,
-	IconCalendar,
-	IconCpu,
-	IconDisc,
-} from "@tabler/icons-react";
+import { IconBan, IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
 import Image from "next/image";
-import Link from "next/link";
+import BackButton from "./back-button";
 
 export default async function PhonePage({
 	params,
@@ -23,13 +17,7 @@ export default async function PhonePage({
 	return (
 		<div className="flex flex-col gap-3 p-3 w-full h-full">
 			<div className="flex flex-col gap-1">
-				<Link
-					className="flex items-center link text-neutral-500"
-					href="/catalog"
-				>
-					<IconArrowLeft />
-					Вернуться в каталог
-				</Link>
+				<BackButton />
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
 				</span>

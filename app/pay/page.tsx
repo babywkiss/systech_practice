@@ -19,8 +19,8 @@ export default async function PayPage() {
 	return (
 		<StripeProvider>
 			<div className="flex flex-col gap-3 justify-center items-center w-full h-full md:flex-row">
-				<CheckoutTotal />
 				<PayWidget />
+				<CheckoutTotal />
 			</div>
 		</StripeProvider>
 	);
