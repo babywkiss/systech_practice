@@ -13,9 +13,12 @@ export type Credentials = {
 };
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
-export const isEmail = (str: string): str is Email => EMAIL_REGEX.test(str);
-export const isPassword = (str: string): str is Password => str.length >= 7;
+export const isEmail = (str: string): str is Email =>
+	EMAIL_REGEX.test(str) && str.length < 50;
+export const isPassword = (str: string): str is Password =>
+	PASSWORD_REGEX.test(str) && str.length < 50;
 
 export const isCredentials = (data: unknown): data is Credentials => {
 	return (
