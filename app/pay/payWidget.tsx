@@ -63,6 +63,7 @@ export default function PayWidget() {
 
 		if (result.error) {
 			setHint(result.error?.message ?? "");
+			setLoading(false);
 		} else {
 			const response = await fetch("/api/orders", {
 				method: "POST",
@@ -74,7 +75,6 @@ export default function PayWidget() {
 			const paymentResponse = await response.json();
 			await handleServerResponse(paymentResponse);
 		}
-		setLoading(false);
 	};
 
 	return (

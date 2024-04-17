@@ -34,9 +34,8 @@ export default function ConfirmResetForm({
 			router.refresh();
 		} else {
 			setError((await res.json()).error.message);
+			setLoading(false);
 		}
-
-		setLoading(false);
 	};
 
 	return (
@@ -44,7 +43,7 @@ export default function ConfirmResetForm({
 			onSubmit={handleSubmit}
 			className="flex flex-col gap-3 justify-center items-center w-full h-full"
 		>
-			Восстановление пароля для {user.email}
+			Восстановление пароля для <span className="font-bold">{user.email}</span>
 			<label className="flex gap-2 items-center w-4/5 input md:w-fit">
 				<IconKey />
 				<input

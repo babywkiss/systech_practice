@@ -22,8 +22,8 @@ export default function ResetPasswordForm() {
 			modal?.current?.showModal();
 		} else {
 			setError((await res.json()).error.message);
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	return (

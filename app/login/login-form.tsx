@@ -22,8 +22,8 @@ export default function LoginForm() {
 					router.refresh();
 				} else {
 					setError((await res.json()).error.message);
+					setLoading(false);
 				}
-				setLoading(false);
 			}}
 		/>
 	);
