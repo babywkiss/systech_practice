@@ -85,7 +85,18 @@ export default function PayWidget() {
 			<label className="flex flex-col gap-8">
 				Введите данные для оплаты
 				<div className="p-3 rounded-lg bg-base-200">
-					<CardElement />
+					<CardElement
+						options={{
+							style: {
+								base: {
+									// HACK: extract styles from main document to iframe
+									color: getComputedStyle(document.body).getPropertyValue(
+										"color",
+									),
+								},
+							},
+						}}
+					/>
 				</div>
 				<span className="text-sm text-error">{hint}</span>
 			</label>
