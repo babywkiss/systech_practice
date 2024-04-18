@@ -22,9 +22,9 @@ export default async function Header() {
 			</div>
 			{user?.isSuperAdmin && (
 				<div className="flex-none">
-					<Link className="btn btn-warning" href="/admin">
+					<Link className="hidden md:flex btn btn-warning" href="/admin">
 						<IconUser />
-						<span className="hidden md:block">Пользователи</span>
+						<span>Пользователи</span>
 					</Link>
 				</div>
 			)}

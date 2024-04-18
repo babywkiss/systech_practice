@@ -1,3 +1,4 @@
+import { formatPrice } from "@/app/utils";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
@@ -163,17 +164,19 @@ export default function PhoneEdit({
 
 			<span>
 				Стоимость ={" "}
-				<span className="text-lg font-bold text-success">{phone.priceBYN}</span>
+				<span className="text-lg font-bold text-success">
+					{formatPrice(phone.priceBYN)}
+				</span>
 			</span>
 			<input
 				min={0}
 				max={5000}
 				step={10}
-				value={phone.priceBYN}
+				value={phone.priceBYN / 100}
 				onInput={(e) => {
 					setPhone({
 						...phone,
-						priceBYN: Number((e.target as HTMLInputElement).value),
+						priceBYN: Number((e.target as HTMLInputElement).value) * 100,
 					});
 				}}
 				type="range"

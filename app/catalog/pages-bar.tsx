@@ -17,10 +17,10 @@ export default function PagesBar({
 				>
 					«
 				</button>
-				{range.map((p) => (
+				{range.map((p, i) => (
 					<button
 						className={`join-item btn ${p === page ? "btn-primary" : ""}`}
-						key={p}
+						key={i}
 						onClick={() => {
 							setPage(p);
 						}}
@@ -42,10 +42,18 @@ export default function PagesBar({
 	);
 }
 
-const MAX_OFFSET = 3;
+const MAX_SIZE = 5;
 
-const generateRange = (page: number, totalPages: number) =>
-	Array.from(
-		{ length: MAX_OFFSET * 2 },
-		(_, i) => page - MAX_OFFSET + i,
-	).filter((p) => p >= 0 && p < totalPages);
+const generateRange = (page: number, totalPages: number) => {
+	let left = page;
+	let right = page;
+
+	while (true) {
+		let prev = right - left;
+		if (right < totalPages && right - left <= MAX_SIZE - 1) right++;
+		if (left > 0 && right - left <= MAX_SIZE - 1) left--;
+		if (prev === right - left) break;
+	}
+
+	return Array.from({ length: right - left }, (_, i) => left + i);
+};
