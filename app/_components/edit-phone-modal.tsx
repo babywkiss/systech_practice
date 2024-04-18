@@ -1,7 +1,7 @@
 import { Phone } from "@prisma/client";
 import Modal from "./modal";
 import { useRouter } from "next/navigation";
-import PhoneEdit from "@/components/admin/PhoneEdit";
+import PhoneEdit from "./phone-edit";
 
 export default function EditPhoneModal({
 	isOpen,

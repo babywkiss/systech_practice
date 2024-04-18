@@ -1,12 +1,11 @@
 import { extractUser } from "@/app/api/auth";
-import AddToBasketButton from "@/components/addToBasketButton";
-import PhoneControl from "@/components/admin/phoneControl";
 import prisma from "@/prisma/client";
 import { IconBan, IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
 import Image from "next/image";
 import BackButton from "./back-button";
 import PagePhoneControls from "./page-phone-controls";
 import { formatPrice } from "@/app/utils";
+import AddToBasketButton from "@/app/_components/add-to-basket-button";
 
 export default async function PhonePage({
 	params,

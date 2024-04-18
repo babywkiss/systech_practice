@@ -1,7 +1,6 @@
 "use client";
 
 import { Phone, User } from "@prisma/client";
-import CreatePhoneButton from "@/components/admin/createPhoneButton";
 import PagesBar from "./pages-bar";
 import OptionsPanel, { Filters } from "./options-panel";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -9,6 +8,7 @@ import PhoneCard from "./phone-card";
 import { useUnmount } from "../hooks";
 import DeletePhoneModal from "../_components/delete-phone-modal";
 import EditPhoneModal from "../_components/edit-phone-modal";
+import CreatePhoneButton from "../_components/create-phone-button";
 
 const ITEMS_PER_PAGE = 9;
 

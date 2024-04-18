@@ -2,7 +2,7 @@
 
 import DeletePhoneModal from "@/app/_components/delete-phone-modal";
 import EditPhoneModal from "@/app/_components/edit-phone-modal";
-import PhoneControl from "@/components/admin/phoneControl";
+import PhoneControl from "@/app/_components/phone-control";
 import { Phone } from "@prisma/client";
 import { useState } from "react";
 

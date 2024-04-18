@@ -2,6 +2,14 @@ import prisma from "@/prisma/client";
 import { extractUser } from "../../auth";
 import { errorResponse, tryOrNull } from "../../utils";
 
+export async function GET(
+	_: Request,
+	{ params: { id } }: { params: { id: string } },
+) {
+	const phone = await prisma.phone.findUnique({ where: { id: Number(id) } });
+	return Response.json(phone, { status: 200 });
+}
+
 export async function DELETE(
 	_: Request,
 	{ params: { id } }: { params: { id: string } },

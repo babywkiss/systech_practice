@@ -5,13 +5,14 @@ import Footer from "./footer";
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
 import { extractUser } from "./api/auth";
+import BasketProvider from "./basket-provider";
 
 const rubik = Rubik({
 	subsets: ["latin", "cyrillic"],
 	variable: "--font-rubik",
 });
 
-const StoreProvider = dynamic(() => import("./store/storeProvider"), {
+const StoreProvider = dynamic(() => import("./store/store-provider"), {
 	ssr: false,
 });
 
@@ -26,16 +27,18 @@ export default async function RootLayout({
 			<body className="flex flex-col">
 				<Toaster />
 				<StoreProvider>
-					<Header />
-					{user?.isAdmin && (
-						<div className="px-3 text-sm font-bold text-black bg-warning">
-							Администратор
-						</div>
-					)}
-					<main className="flex overflow-auto flex-col p-5 w-full h-full bg-base-300">
-						{children}
-					</main>
-					<Footer />
+					<BasketProvider>
+						<Header />
+						{user?.isAdmin && (
+							<div className="px-3 text-sm font-bold text-black bg-warning">
+								Администратор
+							</div>
+						)}
+						<main className="flex overflow-auto flex-col p-5 w-full h-full bg-base-300">
+							{children}
+						</main>
+						<Footer />
+					</BasketProvider>
 				</StoreProvider>
 			</body>
 		</html>

@@ -1,20 +1,18 @@
 "use client";
 
-import { addItemToBasket } from "@/app/store/basketSlice";
+import { addItemToBasket } from "@/app/store/basket-slice";
 import { Phone } from "@prisma/client";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/app/store/store";
 import toast from "react-hot-toast";
-import { RootState } from "@/app/store/store";
-
-const useCountInBasket = (phone: Phone) =>
-	useSelector(
-		(state: RootState) =>
-			state.basket.data.find((data) => data.phone.id === phone.id)?.count ?? 0,
-	);
 
 export default function AddToBasketButton({ phone }: { phone: Phone }) {
 	const dispatch = useDispatch();
-	const countInBasket = useCountInBasket(phone);
+	const countInBasket =
+		useAppSelector((state) =>
+			state.basket.data.find(({ phone: { id } }) => id === phone.id),
+		)?.count ?? 0;
+
 	return (
 		<button
 			disabled={

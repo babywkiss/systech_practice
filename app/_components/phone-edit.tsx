@@ -12,7 +12,7 @@ export const DEFAULT_PHONE: Prisma.PhoneCreateInput = {
 	releaseYear: 2024,
 	cpu: "",
 	ramGB: 3,
-	priceBYN: 500,
+	priceBYN: 500 * 100,
 };
 
 export default function PhoneEdit({
