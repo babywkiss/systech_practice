@@ -24,6 +24,7 @@ export default function CreatePhoneButton() {
 		<>
 			<button
 				onClick={() => {
+					setPhone(DEFAULT_PHONE);
 					setModalOpen(true);
 				}}
 				className="w-full btn btn-info"
