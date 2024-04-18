@@ -18,6 +18,35 @@ export const basketSlice = createSlice({
 				state.data[foundIndex].count += 1;
 			}
 		},
+		updateItem: (
+			state,
+			action: PayloadAction<{ oldPhone: Phone; newPhone: Phone }>,
+		) => {
+			const indexToSet = state.data.findIndex(
+				({ phone }) => phone.id === action.payload.oldPhone.id,
+			);
+			state.data[indexToSet].phone = action.payload.newPhone;
+		},
+		setCountForItem: (
+			state,
+			action: PayloadAction<{ phone: Phone; count: number }>,
+		) => {
+			const indexToSet = state.data.findIndex(
+				({ phone }) => phone.id === action.payload.phone.id,
+			);
+			if (indexToSet !== -1) {
+				state.data[indexToSet].count = action.payload.count;
+				if (action.payload.count <= 0) state.data.splice(indexToSet, 1);
+			}
+		},
+		deleteFromBasket: (state, action: PayloadAction<Phone>) => {
+			const indexToRemove = state.data.findIndex(
+				({ phone }) => phone.id === action.payload.id,
+			);
+			if (indexToRemove !== -1) {
+				state.data.splice(indexToRemove, 1);
+			}
+		},
 		removeItemFromBasket: (state, action: PayloadAction<Phone>) => {
 			const indexToRemove = state.data.findIndex(
 				({ phone }) => phone.id === action.payload.id,
@@ -34,6 +63,12 @@ export const basketSlice = createSlice({
 	},
 });
 
-export const { addItemToBasket, removeItemFromBasket, resetBasket } =
-	basketSlice.actions;
+export const {
+	addItemToBasket,
+	updateItem,
+	removeItemFromBasket,
+	setCountForItem,
+	resetBasket,
+	deleteFromBasket,
+} = basketSlice.actions;
 export default basketSlice.reducer;
