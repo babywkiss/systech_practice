@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import ToggleStatus from "./toggleStatus";
+import ToggleStatus from "./toggle-status";
 import { extractUser } from "../api/auth";
 
 export default async function AdminPage() {

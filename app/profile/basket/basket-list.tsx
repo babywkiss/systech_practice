@@ -1,6 +1,6 @@
 "use client";
 
-import { removeItemFromBasket } from "@/app/store/basketSlice";
+import { removeItemFromBasket } from "@/app/store/basket-slice";
 import { useAppDispatch, useAppSelector } from "@/app/store/store";
 import { IconBan } from "@tabler/icons-react";
 import Image from "next/image";

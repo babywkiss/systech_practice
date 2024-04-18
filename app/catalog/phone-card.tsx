@@ -1,10 +1,10 @@
 import { Phone, User } from "@prisma/client";
 import Link from "next/link";
-import AddToBasketButton from "@/components/addToBasketButton";
-import PhoneControl from "@/components/admin/phoneControl";
 import { formatPrice } from "../utils";
 import Image from "next/image";
 import { IconBan } from "@tabler/icons-react";
+import PhoneControl from "../_components/phone-control";
+import AddToBasketButton from "../_components/add-to-basket-button";
 
 export default function PhoneCard({
 	phone,

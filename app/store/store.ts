@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
-import basketReducer from "./basketSlice";
+import basketReducer from "./basket-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const createNoopStorage = () => {

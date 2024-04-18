@@ -5,7 +5,7 @@ import { FormEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useRouter } from "next/navigation";
-import { resetBasket } from "../store/basketSlice";
+import { resetBasket } from "../store/basket-slice";
 
 export default function PayWidget() {
 	const router = useRouter();

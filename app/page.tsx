@@ -1,8 +1,8 @@
-import AutoSlider from "@/components/autoSlider";
 import prisma from "@/prisma/client";
 import { IconShoppingBag } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
+import AutoSlider from "./_components/auto-slider";
 
 export default async function MainPage() {
 	const mostPopular = await prisma.phone.findMany({

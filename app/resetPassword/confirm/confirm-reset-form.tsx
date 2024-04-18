@@ -5,6 +5,9 @@ import { IconKey } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+const isPassword = (str: string) => PASSWORD_REGEX.test(str) && str.length < 50;
+
 export default function ConfirmResetForm({
 	token,
 	user,
@@ -16,8 +19,15 @@ export default function ConfirmResetForm({
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const data = new FormData(e.target as HTMLFormElement);
-		const newPassword = data.get("password");
-		if (typeof newPassword !== "string") return;
+
+		const newPassword = data.get("password")?.toString() ?? "";
+		const isPasswordValid = isPassword(newPassword);
+		if (!isPasswordValid) {
+			setError(
+				"Пароль должен содержать минимум 1 цифру, 1 символ (нижний и верхний регистр), минимум 8 латинских символов.",
+			);
+			return;
+		}
 
 		setLoading(true);
 

@@ -11,7 +11,7 @@ const rubik = Rubik({
 	variable: "--font-rubik",
 });
 
-const StoreProvider = dynamic(() => import("./store/storeProvider"), {
+const StoreProvider = dynamic(() => import("./store/store-provider"), {
 	ssr: false,
 });
 

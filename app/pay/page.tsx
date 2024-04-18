@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { extractUser } from "../api/auth";
-import StripeProvider from "../stripeProvider";
-import CheckoutTotal from "./checkoutTotal";
-import PayWidget from "./payWidget";
+import CheckoutTotal from "./checkout-total";
+import PayWidget from "./pay-widget";
+import StripeProvider from "./stripe-provider";
 
 export default async function PayPage() {
 	const user = await extractUser();
