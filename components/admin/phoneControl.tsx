@@ -1,19 +1,34 @@
-import { Phone } from "@prisma/client";
-import DeletePhoneButton from "./deletePhoneButton";
-import EditPhoneButton from "./editPhoneButton";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 export default function PhoneControl({
-	phone,
 	verbose = false,
-}: { phone: Phone; verbose?: boolean }) {
+	onDelete,
+	onEdit,
+}: {
+	verbose?: boolean;
+	onDelete?: () => void;
+	onEdit?: () => void;
+}) {
 	return (
 		<div className="flex gap-2 items-center">
-			<DeletePhoneButton phone={phone}>
+			<button
+				onClick={() => onDelete?.()}
+				className={`btn btn-error ${
+					verbose ? "" : "btn-square"
+				} btn-sm btn-outline`}
+			>
+				<IconTrash />
 				{verbose && "Удалить"}
-			</DeletePhoneButton>
-			<EditPhoneButton phone={phone}>
+			</button>
+			<button
+				onClick={() => onEdit?.()}
+				className={`btn btn-info ${
+					verbose ? "" : "btn-square"
+				} btn-sm btn-outline`}
+			>
 				{verbose && "Редактировать"}
-			</EditPhoneButton>
+				<IconEdit />
+			</button>
 		</div>
 	);
 }

@@ -9,28 +9,29 @@ import { IconBan } from "@tabler/icons-react";
 export default function PhoneCard({
 	phone,
 	user,
-}: { phone: Phone; user: User | null }) {
+	onDelete,
+	onEdit,
+}: {
+	phone: Phone;
+	user: User | null;
+	onDelete?: (phone: Phone) => void;
+	onEdit?: (phone: Phone) => void;
+}) {
 	return (
 		<div className="flex flex-col gap-3 p-3 w-full rounded-lg transition-all md:w-80 hover:shadow-xl bg-base-200 hover:bg-base-100">
-			<div className="flex justify-between items-center group">
-				<Link
-					href={`/catalog/${phone.id}`}
-					className="flex gap-3 items-center w-full text-xl"
-				>
-					<span className="font-bold">{phone.manufacturer}</span>
-					<span>{phone.model}</span>
+			<Link
+				href={`/catalog/${phone.id}`}
+				className="flex flex-col gap-3 items-center"
+			>
+				<div className="flex gap-3 w-full">
+					<span className="flex gap-2 items-center text-xl">
+						<span className="font-bold">{phone.manufacturer}</span>
+						{phone.model}
+					</span>
 					{phone.available_quantity === 0 && (
 						<span className="text-sm text-error">Нет в наличии</span>
 					)}
-				</Link>
-				<div className="md:invisible group-hover:visible">
-					{user?.isAdmin === true && <PhoneControl phone={phone} />}
 				</div>
-			</div>
-			<Link
-				className="flex justify-center w-full"
-				href={`/catalog/${phone.id}`}
-			>
 				{phone.imageLink ? (
 					<Image
 						alt="phone-image"
@@ -52,6 +53,15 @@ export default function PhoneCard({
 					{formatPrice(phone.priceBYN)} BYN
 				</span>
 			</span>
+			<div className="flex justify-center w-full">
+				{user?.isAdmin === true && (
+					<PhoneControl
+						verbose
+						onEdit={() => onEdit?.(phone)}
+						onDelete={() => onDelete?.(phone)}
+					/>
+				)}
+			</div>
 			<AddToBasketButton phone={phone} />
 		</div>
 	);

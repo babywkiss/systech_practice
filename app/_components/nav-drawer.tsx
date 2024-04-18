@@ -1,6 +1,6 @@
 "use client";
 
-import { IconMenu, IconX } from "@tabler/icons-react";
+import { IconMenu, IconUser, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRef } from "react";
 
@@ -48,6 +48,16 @@ export default function NavDrawer() {
 							<Link href={href}>{name}</Link>
 						</li>
 					))}
+					<li className="flex flex-1 justify-end md:hidden">
+						<Link
+							onClick={() => drawerToggleRef.current?.click()}
+							className="btn btn-warning"
+							href="/admin"
+						>
+							<IconUser />
+							<span>Пользователи</span>
+						</Link>
+					</li>
 				</ul>
 			</div>
 		</div>
