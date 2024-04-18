@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@prisma/client";
 import { IconMenu, IconUser, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRef } from "react";
@@ -9,7 +10,7 @@ const LINKS = [
 	{ name: "Мой аккаунт", href: "/profile/info" },
 ];
 
-export default function NavDrawer() {
+export default function NavDrawer({ user }: { user: User | null }) {
 	const drawerToggleRef = useRef<HTMLInputElement>(null);
 
 	return (
@@ -48,16 +49,18 @@ export default function NavDrawer() {
 							<Link href={href}>{name}</Link>
 						</li>
 					))}
-					<li className="flex flex-1 justify-end md:hidden">
-						<Link
-							onClick={() => drawerToggleRef.current?.click()}
-							className="btn btn-warning"
-							href="/admin"
-						>
-							<IconUser />
-							<span>Пользователи</span>
-						</Link>
-					</li>
+					{user?.isSuperAdmin === true && (
+						<li className="flex flex-1 justify-end md:hidden">
+							<Link
+								onClick={() => drawerToggleRef.current?.click()}
+								className="btn btn-warning"
+								href="/admin"
+							>
+								<IconUser />
+								<span>Пользователи</span>
+							</Link>
+						</li>
+					)}
 				</ul>
 			</div>
 		</div>
