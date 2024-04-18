@@ -43,7 +43,7 @@ export default async function Header() {
 				<BasketLink />
 			</div>
 			<div className="flex-none">
-				<NavDrawer />
+				<NavDrawer user={user} />
 			</div>
 		</div>
 	);
