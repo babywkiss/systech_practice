@@ -3,9 +3,9 @@ import prisma from "@/prisma/client";
 import { IconBan, IconCalendar, IconCpu, IconDisc } from "@tabler/icons-react";
 import Image from "next/image";
 import BackButton from "./back-button";
-import PagePhoneControls from "./page-phone-controls";
 import { formatPrice } from "@/app/utils";
 import AddToBasketButton from "@/app/_components/add-to-basket-button";
+import PhoneControls from "@/app/_components/phone-controls";
 
 export default async function PhonePage({
 	params,
@@ -22,7 +22,7 @@ export default async function PhonePage({
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
 				</span>
-				{isAdmin && <PagePhoneControls phone={phone} />}
+				{isAdmin && <PhoneControls phone={phone} />}
 				<span
 					className={`${
 						phone.available_quantity > 0 ? "text-success" : "text-error"

@@ -6,8 +6,6 @@ import OptionsPanel, { Filters } from "./options-panel";
 import { useLayoutEffect, useRef, useState } from "react";
 import PhoneCard from "./phone-card";
 import { useUnmount } from "../hooks";
-import DeletePhoneModal from "../_components/delete-phone-modal";
-import EditPhoneModal from "../_components/edit-phone-modal";
 import CreatePhoneButton from "../_components/create-phone-button";
 
 const ITEMS_PER_PAGE = 9;
@@ -81,13 +79,6 @@ export default function Catalog({
 	const scrollTop = () =>
 		listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
 
-	// modals
-	const [phoneToDelete, setPhoneToDelete] = useState<Phone>();
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	const [phoneToEdit, setPhoneToEdit] = useState<Phone>();
-	const [editPhoneModalOpen, setEditPhoneModalOpen] = useState(false);
-
 	return (
 		<>
 			<div className="flex flex-col gap-3 h-full md:flex-row shrink-0">
@@ -117,19 +108,7 @@ export default function Catalog({
 					>
 						{paginatedPhones.length > 0 ? (
 							paginatedPhones.map((phone) => (
-								<PhoneCard
-									key={phone.id}
-									phone={phone}
-									user={user}
-									onDelete={() => {
-										setPhoneToDelete(phone);
-										setDeleteModalOpen(true);
-									}}
-									onEdit={() => {
-										setPhoneToEdit(phone);
-										setEditPhoneModalOpen(true);
-									}}
-								/>
+								<PhoneCard key={phone.id} phone={phone} user={user} />
 							))
 						) : (
 							<div className="flex justify-center items-center w-full h-full">
@@ -149,23 +128,6 @@ export default function Catalog({
 					/>
 				</div>
 			</div>
-
-			{phoneToDelete && (
-				<DeletePhoneModal
-					phone={phoneToDelete}
-					isOpen={deleteModalOpen}
-					onClose={() => setDeleteModalOpen(false)}
-				/>
-			)}
-
-			{phoneToEdit && (
-				<EditPhoneModal
-					phone={phoneToEdit}
-					setPhone={setPhoneToEdit}
-					isOpen={editPhoneModalOpen}
-					onClose={() => setEditPhoneModalOpen(false)}
-				/>
-			)}
 		</>
 	);
 }

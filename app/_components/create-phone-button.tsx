@@ -12,7 +12,7 @@ export default function CreatePhoneButton() {
 	const handleAdd = async () => {
 		const res = await fetch("/api/phones/", {
 			method: "POST",
-			body: JSON.stringify({ ...phone, priceBYN: phone.priceBYN * 100 }),
+			body: JSON.stringify(phone),
 		});
 		const id = await res.text();
 
@@ -34,8 +34,8 @@ export default function CreatePhoneButton() {
 			</button>
 
 			<Modal
-				onClose={() => setModalOpen(false)}
 				isOpen={modalOpen}
+				onClose={() => setModalOpen(false)}
 				actions={
 					<>
 						<button className="btn">Отмена</button>

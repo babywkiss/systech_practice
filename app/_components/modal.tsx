@@ -7,7 +7,7 @@ export default function Modal({
 	actions,
 }: {
 	isOpen: boolean;
-	onClose: () => void;
+	onClose?: () => void;
 	children?: React.ReactNode;
 	actions?: React.ReactNode;
 }) {
@@ -21,21 +21,25 @@ export default function Modal({
 	}, [isOpen]);
 
 	return (
-		<dialog ref={ref} className={`modal ${isOpen ? "" : "invisible"}`}>
+		<dialog ref={ref} className="modal">
 			<div className="modal-box">
-				{children}
-				<div className="modal-action">
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							onClose();
-						}}
-						method="dialog"
-						className="flex gap-2 items-center"
-					>
-						{actions}
-					</form>
-				</div>
+				{isOpen && (
+					<>
+						{children}
+						<div className="modal-action">
+							<form
+								onSubmit={(e) => {
+									e.preventDefault();
+									onClose?.();
+								}}
+								method="dialog"
+								className="flex gap-2 items-center"
+							>
+								{actions}
+							</form>
+						</div>
+					</>
+				)}
 			</div>
 		</dialog>
 	);

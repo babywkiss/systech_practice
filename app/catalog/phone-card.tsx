@@ -3,14 +3,12 @@ import Link from "next/link";
 import { formatPrice } from "../utils";
 import Image from "next/image";
 import { IconBan } from "@tabler/icons-react";
-import PhoneControl from "../_components/phone-control";
 import AddToBasketButton from "../_components/add-to-basket-button";
+import PhoneControls from "../_components/phone-controls";
 
 export default function PhoneCard({
 	phone,
 	user,
-	onDelete,
-	onEdit,
 }: {
 	phone: Phone;
 	user: User | null;
@@ -54,13 +52,7 @@ export default function PhoneCard({
 				</span>
 			</span>
 			<div className="flex justify-center w-full">
-				{user?.isAdmin === true && (
-					<PhoneControl
-						verbose
-						onEdit={() => onEdit?.(phone)}
-						onDelete={() => onDelete?.(phone)}
-					/>
-				)}
+				{user?.isAdmin === true && <PhoneControls phone={phone} />}
 			</div>
 			<AddToBasketButton phone={phone} />
 		</div>
