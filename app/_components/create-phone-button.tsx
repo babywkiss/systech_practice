@@ -1,3 +1,5 @@
+"use client";
+
 import { IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

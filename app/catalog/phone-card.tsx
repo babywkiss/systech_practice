@@ -1,27 +1,29 @@
-import { Phone, User } from "@prisma/client";
+import { Phone } from "@prisma/client";
 import Link from "next/link";
 import { formatPrice } from "../utils";
 import Image from "next/image";
 import { IconBan } from "@tabler/icons-react";
 import AddToBasketButton from "../_components/add-to-basket-button";
 import PhoneControls from "../_components/phone-controls";
+import { extractUser } from "../api/auth";
 
-export default function PhoneCard({
+export default async function PhoneCard({
 	phone,
-	user,
 }: {
 	phone: Phone;
-	user: User | null;
-	onDelete?: (phone: Phone) => void;
-	onEdit?: (phone: Phone) => void;
 }) {
+	const user = await extractUser();
+
 	return (
-		<div className="flex flex-col gap-3 p-3 w-full rounded-lg transition-all md:w-80 hover:shadow-xl bg-base-200 hover:bg-base-100">
+		<div
+			id={`phone-${phone.id}`}
+			className="flex flex-col gap-3 p-3 w-full rounded-lg transition-all md:w-80 hover:shadow-xl bg-base-200 hover:bg-base-100"
+		>
 			<Link
 				href={`/catalog/${phone.id}`}
 				className="flex flex-col gap-3 items-center"
 			>
-				<div className="flex gap-3 w-full">
+				<div className="flex gap-3 justify-between items-center w-full">
 					<span className="flex gap-2 items-center text-xl">
 						<span className="font-bold">{phone.manufacturer}</span>
 						{phone.model}

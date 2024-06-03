@@ -18,7 +18,7 @@ export default async function PhonePage({
 	return (
 		<div className="flex flex-col gap-3 p-3 w-full h-full">
 			<div className="flex flex-col gap-1">
-				<BackButton />
+				<BackButton phoneId={phone.id} />
 				<span className="text-3xl font-bold">
 					{phone.manufacturer} {phone.model}
 				</span>

@@ -2,13 +2,22 @@
 
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function BackButton() {
-	const router = useRouter();
+export let restoredPhoneId = null as number | null;
+
+export default function BackButton({ phoneId }: { phoneId: number }) {
+	useEffect(() => {
+		restoredPhoneId = phoneId;
+	}, []);
+
+	const { back } = useRouter();
 
 	return (
 		<button
-			onClick={() => router.back()}
+			onClick={() => {
+				back();
+			}}
 			className="flex items-center link text-neutral-500"
 		>
 			<IconArrowLeft />

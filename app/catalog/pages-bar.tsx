@@ -1,9 +1,20 @@
-export default function PagesBar({
-	totalPages,
-	page,
-	setPage,
-}: { totalPages: number; page: number; setPage: (page: number) => void }) {
+"use client";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+export default function PagesBar({ totalPages }: { totalPages: number }) {
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+	const { replace } = useRouter();
+
+	const page = Number(searchParams.get("page"));
 	const range = generateRange(page, totalPages);
+
+	const setPage = (page: number) => {
+		const params = new URLSearchParams(searchParams);
+		params.set("page", page.toString());
+		replace(`${pathname}?${params.toString()}`);
+	};
 
 	return (
 		<div className="flex justify-center pt-3 w-full">

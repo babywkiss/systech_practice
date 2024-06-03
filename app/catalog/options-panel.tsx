@@ -1,33 +1,28 @@
+"use client";
+
 import { IconSearch } from "@tabler/icons-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export type Filters = {
-	searchQuery: string;
-	maxPrice: number;
-	onlyAvailable: boolean;
-};
+export default function OptionsPanel() {
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+	const { replace } = useRouter();
 
-export default function OptionsPanel({
-	isSortAsc,
-	filters,
-	setFilters,
-	setIsSortAsc,
-}: {
-	isSortAsc: boolean;
-	filters: Filters;
-	setFilters: (filters: Filters) => void;
-	setIsSortAsc: (isSortAsc: boolean) => void;
-}) {
+	const setParam = (key: string, value: unknown) => {
+		const params = new URLSearchParams(searchParams);
+		params.set(key, value?.toString() ?? "");
+		params.set("page", "0");
+		replace(`${pathname}?${params.toString()}`);
+	};
+
 	return (
 		<>
 			<label className="flex gap-2 items-center input input-bordered">
 				<input
 					onInput={(e) => {
-						setFilters({
-							...filters,
-							searchQuery: (e.target as HTMLInputElement).value,
-						});
+						setParam("query", (e.target as HTMLInputElement).value);
 					}}
-					value={filters.searchQuery}
+					defaultValue={searchParams.get("query")?.toString()}
 					type="text"
 					className="grow"
 					placeholder="Поиск по названию"
@@ -41,9 +36,9 @@ export default function OptionsPanel({
 				<select
 					className="select"
 					onChange={(e) => {
-						setIsSortAsc(e.target.value === "asc");
+						setParam("sort", e.target.value);
 					}}
-					defaultValue={isSortAsc ? "asc" : "desc"}
+					defaultValue={searchParams.get("sort") ?? "asc"}
 				>
 					<option value="asc">По возрастанию цены</option>
 					<option value="desc">По убыванию цены</option>
@@ -53,13 +48,10 @@ export default function OptionsPanel({
 				<label className="cursor-pointer label">
 					<span className="label-text">Показывать только в наличии</span>
 					<input
-						onInput={() => {
-							setFilters({
-								...filters,
-								onlyAvailable: !filters.onlyAvailable,
-							});
+						onInput={(e) => {
+							setParam("onlyInStock", (e.target as HTMLInputElement).checked);
 						}}
-						defaultChecked={filters.onlyAvailable}
+						defaultChecked={!!searchParams.get("onlyInStock")}
 						type="checkbox"
 						className="checkbox"
 					/>
@@ -72,12 +64,12 @@ export default function OptionsPanel({
 				<input
 					className="range"
 					onInput={(e) => {
-						setFilters({
-							...filters,
-							maxPrice: Number((e.target as HTMLInputElement).value),
-						});
+						setParam(
+							"maxPrice",
+							Number((e.target as HTMLInputElement).value) * 100,
+						);
 					}}
-					value={filters.maxPrice}
+					defaultValue={7000}
 					min="0"
 					max="7000"
 					step="100"
@@ -85,7 +77,10 @@ export default function OptionsPanel({
 				/>
 				<div className="flex justify-between">
 					<span className="label-text">0</span>
-					<span className="label-text">{filters.maxPrice}</span>
+					<span className="label-text">
+						{Number(searchParams.get("maxPrice")?.toString() ?? 7000 * 100) /
+							100}
+					</span>
 				</div>
 			</label>
 		</>
